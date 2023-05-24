@@ -6,3 +6,4 @@ pdp11asm test_vars.asm
 pdp11asm test_proc.asm
 pdp11asm test_timer.asm
 pdp11asm test_int2str.asm
+pdp11asm test_rnd.asm
