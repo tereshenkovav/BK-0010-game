@@ -30,7 +30,7 @@ KEYWAIT:
 	MOV	#377, R3 ; Повтор генерации
 
 CICLE:
-        MOV	#17,R0 ; Указываем число в интервале от 0 до 7
+        MOV	#17,R0 ; Указываем число в интервале от 0 до 15
         JSR PC, @#GENRNDVALUE
 
         MOV	R0,-(SP)   ; Процедура принимает число                    
@@ -47,6 +47,27 @@ CICLE:
 	EMT	16
         
 	SOB	R3,CICLE
+
+	MOV	#MSG,R1     ; Вывод строки по умолчанию с нулем на конце
+	MOV	#0,R2               
+	EMT	20               
+
+KEYWAIT2:        
+        JSR PC, @#KEY_TESTER
+	CMP	R1,#0       ;не было нажатий и нет удержания
+        BEQ     KEYWAIT2
+
+	EMT     14
+
+	MOV	#40000, R1 ; Начало видеопамяти
+	MOV	#40000, R3 ; Повтор генерации
+CICLE2:
+        MOV	#377,R0 ; Указываем число в интервале от 0 до 255
+        JSR PC, @#GENRNDVALUE
+
+	MOVB	R0,(R1)+
+
+        SOB	R3,CICLE2
 
 	HALT
 
