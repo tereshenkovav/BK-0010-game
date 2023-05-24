@@ -18,6 +18,12 @@ START:
         JSR PC, @#DRAWSPRITE
         ADD	#6, SP     ; Восстановить стек на 2*число аргументов
 
+        MOV	#SPRUNICORN_MIRR,-(SP)   ; Спрайт
+        MOV	R0,-(SP)   ; X
+        MOV	#100,-(SP)  ; Y
+        JSR PC, @#DRAWSPRITE
+        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
+
 	MOV 	#30000,R2
 PAUSE1:	NOP
 	SOB	R2,PAUSE1
@@ -35,6 +41,14 @@ PAUSE1:	NOP
 	ADD	#34,R2
         MOV	R2,-(SP)   ; X - в конце спрайта при обратном ходе
         MOV	#200,-(SP)  ; Y
+        MOV	#1,-(SP)  ; DX - размер затираемой области по движению
+        MOV	#40,-(SP)  ; DY
+        JSR PC, @#CLEARZONE
+        ADD	#10, SP     ; Восстановить стек на 2*число аргументов
+
+	; Затирание прямого хода
+        MOV	R0,-(SP)   ; X
+        MOV	#100,-(SP)  ; Y
         MOV	#1,-(SP)  ; DX - размер затираемой области по движению
         MOV	#40,-(SP)  ; DY
         JSR PC, @#CLEARZONE
