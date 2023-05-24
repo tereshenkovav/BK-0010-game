@@ -14,25 +14,31 @@ START:
 
         MOV	#SPRUNICORN,-(SP)   ; —прайт
         MOV	R1,-(SP)   ; X
-        MOV	#300,-(SP)  ; Y
+        MOV	#200,-(SP)  ; Y
         JSR PC, @#DRAWSPRITE
         ADD	#6, SP     ; ¬осстановить стек на 2*число аргументов
 
-	MOV 	#70000,R2
+	MOV 	#30000,R2
 PAUSE1:	NOP
 	SOB	R2,PAUSE1
 
-        MOV	#SPRUNICORN_MIRR,-(SP)   ; —прайт
+	; «атирание пр€мого хода
         MOV	R0,-(SP)   ; X
         MOV	#300,-(SP)  ; Y
-        JSR PC, @#CLEARSPRITE
-        ADD	#6, SP     ; ¬осстановить стек на 2*число аргументов
+        MOV	#1,-(SP)  ; DX - размер затираемой области по движению
+        MOV	#40,-(SP)  ; DY
+        JSR PC, @#CLEARZONE
+        ADD	#10, SP     ; ¬осстановить стек на 2*число аргументов
 
-        MOV	#SPRUNICORN,-(SP)   ; —прайт
-        MOV	R1,-(SP)   ; X
-        MOV	#300,-(SP)  ; Y
-        JSR PC, @#CLEARSPRITE
-        ADD	#6, SP     ; ¬осстановить стек на 2*число аргументов
+        ; «атирание обратного хода с конца
+        MOV	R1,R2
+	ADD	#34,R2
+        MOV	R2,-(SP)   ; X - в конце спрайта при обратном ходе
+        MOV	#200,-(SP)  ; Y
+        MOV	#1,-(SP)  ; DX - размер затираемой области по движению
+        MOV	#40,-(SP)  ; DY
+        JSR PC, @#CLEARZONE
+        ADD	#10, SP     ; ¬осстановить стек на 2*число аргументов
 
 	ADD	#4,R0
 	SUB	#4,R1

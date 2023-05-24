@@ -101,3 +101,51 @@ COL1:	MOVB	#0,(R1)+  ; Неоптимально, если можно сделать 2 байта
 	MOV     (SP)+,R0
 
         RTS PC
+
+; Аргументы в стеке: X, Y, DX, DY
+CLEARZONE:
+        ; Сохранение регистров
+        MOV	R0,-(SP)
+        MOV	R1,-(SP)
+        MOV	R2,-(SP)
+        MOV	R3,-(SP)
+        MOV	R4,-(SP)
+        MOV	R5,-(SP)
+
+        ; Извлечение аргументов
+        ADD	#16,SP
+        MOV     (SP)+,R5 ; DY
+        MOV     (SP)+,R4 ; DX
+        MOV     (SP)+,R2 ; Y
+        MOV     (SP),R1 ; X
+        SUB	#24,SP
+                          ; Много дублирования с кодом выше
+	MOV	#40000,R3 ; Вычисляем позицию в видеопамяти
+	ASR	R1	
+	ASR	R1
+	ADD	R1,R3
+CALCY2:	ADD	#100,R3   ; Неоптимальное умножение #100 на Y
+	SOB	R2,CALCY2	
+	MOV	R3,R1     ; В R1 теперь конечный адрес назначения
+       
+	MOV	R5,R3
+
+ROW2:	MOV	R4,R2
+        
+COL2:	MOVB	#0,(R1)+  ; Неоптимально, если можно сделать 2 байта
+	SOB	R2,COL2
+
+	ADD	#100,R1
+	SUB	R4,R1
+
+	SOB	R3,ROW2
+
+        ; Восстановление регистров
+	MOV     (SP)+,R5
+	MOV     (SP)+,R4
+	MOV     (SP)+,R3
+	MOV     (SP)+,R2
+	MOV     (SP)+,R1
+	MOV     (SP)+,R0
+
+        RTS PC
