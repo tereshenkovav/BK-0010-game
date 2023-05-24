@@ -16,10 +16,18 @@
 	MOV	#0,R2               
 	EMT	20               
         
-	MOV	#377, R3 ; Повтор генерации
+        ; Генерация начального значения по ожиданию клавиатуры
+        MOV	#0,R2	
+KEYWAIT:
+        INC	R2
+        JSR PC, @#KEY_TESTER
+	CMP	R1,#0       ;не было нажатий и нет удержания
+        BEQ     KEYWAIT
 
-        MOV	#54321,R0 ; Начальное значение
+        MOV	R2,R0 ; Начальное значение
         JSR PC, @#SETRNDSEED
+
+	MOV	#377, R3 ; Повтор генерации
 
 CICLE:
         MOV	#17,R0 ; Указываем число в интервале от 0 до 7
@@ -44,6 +52,7 @@ CICLE:
 
 .include "proc_genrnd.inc"
 .include "proc_int2str.inc"
+.include "proc_keytester.inc"
 
 BUF:    .BYTE   0,0,0,0,0,0 
 MSG:    .ASCIZ  "Press any key"
