@@ -12,13 +12,19 @@
 	MOV	#0,@#212  ; цвет и фон
 	MOV	#125252,@#214   
 
-	MOV	#12345, R4 ; Начальное значение
+	MOV	#MSG,R1     ; Вывод строки по умолчанию с нулем на конце
+	MOV	#0,R2               
+	EMT	20               
+        
 	MOV	#377, R3 ; Повтор генерации
+
+        MOV	#54321,R0 ; Начальное значение
+        JSR PC, @#SETRNDSEED
+
 CICLE:
-        MOV	R4,R0
-        MOV	#7,R2
-        COM	R2
-        BIC	R2,R0
+        MOV	#17,R0 ; Указываем число в интервале от 0 до 7
+        JSR PC, @#GENRNDVALUE
+
         MOV	R0,-(SP)   ; Процедура принимает число                    
         MOV	#BUF,-(SP) ; указатель на буфер                           
         MOV	#0,-(SP)  ; символ добивки слева или #0, если без добивки
@@ -31,27 +37,16 @@ CICLE:
 
 	MOV	#40,R0      ; Пробел
 	EMT	16
-
-	; R4 - старое значение
-	MOV	R4,R5
-	ROL     R5
-	XOR	R5,R4
-
-	MOV	R4,R5
-	ROR     R5
-	XOR	R5,R4
-
-	MOV	R4,R5
-	ROL     R5
-	XOR	R5,R4
         
 	SOB	R3,CICLE
 
 	HALT
 
+.include "proc_genrnd.inc"
 .include "proc_int2str.inc"
 
 BUF:    .BYTE   0,0,0,0,0,0 
+MSG:    .ASCIZ  "Press any key"
         .EVEN
         .END
 
