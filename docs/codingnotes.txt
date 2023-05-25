@@ -33,3 +33,7 @@ SELECT R0 | @#X
   CASE ELSE
     asm
 END
+
+PUSHA
+
+POPA
