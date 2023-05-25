@@ -1,0 +1,35 @@
+1. Компилятор не проверяет дублирование меток. 
+Нужно сделать уникальные метки во всех процедурах.
+2. Внимательно смотреть, где достаточно байтовых операций.
+3. Кодировать логику удобней с препроцессором.
+Вызовы препроцессора:
+
+CALL ProcName,Arg1,Arg2,Arg3...ArgN
+
+IF a=b | a<>b | a<b | a<=b  THEN
+  asm
+ELSE
+  asm
+ENDIF
+
+FOR R0 | @#X = 1 to 10 | R1 | @#N
+  asm
+NEXT R0
+
+WHILE a=b | a<>b | a<b | a<=b 
+  asm
+WEND
+
+REPEAT
+UNTIL a=b | a<>b | a<b | a<=b 
+
+SELECT R0 | @#X
+  CASE 1 | R1 | @#N
+    asm
+  CASE 2 | R2 | @#M
+    asm
+  CASE 3 | R3 | @#Z 
+    asm
+  CASE ELSE
+    asm
+END
