@@ -1,35 +1,88 @@
 	.LINK 1000
 
         EMT     14
-	MOV    #233,R0  ; режим 32 символа
+	MOV    #233,R4  ; режим 32 символа
 	EMT    16
-	MOV    #232,R0  ; скрытие курсора
+	MOV    #232,R4  ; скрытие курсора
 	EMT    16
 	; Запрещаем прерывания от клавиатуры, чтобы не мешало игре
 	BIS	#100,@#177660 
 
-	MOV	#10,R0
+	MOV	#200,@#PONYX
+	MOV	@#PONYX,@#PONYRENDERX
+	MOV	#0,@#PONYDX
+	MOV	#4,@#PONYDIR
 START:
 	MOV	#3777,@#177706  ; Длительность фрейма (3777 - примерно 10 FPS)
         MOV	#24,@#177712  ; Разрешаем счет и индикацию
 
-        ; В начале сцены чистка старой
+; ===== блок опроса клавиатуры ======
+        JSR PC, @#KEY_TESTER
+
+	CMP	R1,#0       ;не было нажатий и нет удержания
+        BEQ     END_KEY
+
+        CMP	R1,#2       ; если режим удержания (2), пропускаем
+        BEQ     END_KEY
+
+        ; Иначе режим нажатия (1) и мы его парсим
+	CMP	R0,#31      ; клавиша "курсор вправо"?
+	BNE     KEYSTEP1
+       	MOV	#4,@#PONYDX ; Смена скорости
+       	MOV	#4,@#PONYDIR; Смена поворота
+KEYSTEP1:  
+	CMP	R0,#10      ; клавиша "курсор влево"?
+	BNE     KEYSTEP2
+       	MOV	#-4,@#PONYDX ; Смена скорости
+       	MOV	#-4,@#PONYDIR; Смена поворота
+KEYSTEP2:
+	CMP	R0,#40      ; клавиша "пробел"?
+	BNE     KEYSTEP3
+       	MOV	#0,@#PONYDX ; Смена скорости
+KEYSTEP3:
+
+END_KEY:        
+
+; ===== блок чистки старой сцены ======
+        CMP	@#PONYX, @#PONYRENDERX
+        BEQ	NO_CLEARZONE
+        ;[!] Добавить выбор, где чистить, чтобы избежать лишних вызовов
 
 	; Затирание прямого хода
-        MOV	R0,-(SP)   ; X
+        MOV	@#PONYRENDERX,-(SP)   ; X
         MOV	#300,-(SP)  ; Y
         MOV	#1,-(SP)  ; DX - размер затираемой области по движению
         MOV	#40,-(SP)  ; DY
         JSR PC, @#CLEARZONE
         ADD	#10, SP     ; Восстановить стек на 2*число аргументов
 
-	ADD	#4,R0 ; Движение
+        ; Затирание обратного хода с конца
+        MOV	@#PONYRENDERX,R0
+	ADD	#34,R0
+        MOV	R0,-(SP)   ; X - в конце спрайта при обратном ходе
+        MOV	#300,-(SP)  ; Y
+        MOV	#1,-(SP)  ; DX - размер затираемой области по движению
+        MOV	#40,-(SP)  ; DY
+        JSR PC, @#CLEARZONE
+        ADD	#10, SP     ; Восстановить стек на 2*число аргументов
 
+NO_CLEARZONE:
+
+; ===== блок рендера ======
+
+        CMP	@#PONYDIR,#4      ; Выбор типа спрайта
+	BNE     MIRRPONYSPR
         MOV	#SPRUNICORN,-(SP)   ; Спрайт
-        MOV	R0,-(SP)   ; X
+        JMP	DODRAWPONYSPR
+MIRRPONYSPR:
+        MOV	#SPRUNICORN_MIRR,-(SP)   ; Спрайт
+DODRAWPONYSPR:
+        MOV	@#PONYX,-(SP)   ; X
         MOV	#300,-(SP)  ; Y
         JSR PC, @#DRAWSPRITE
         ADD	#6, SP     ; Восстановить стек на 2*число аргументов
+
+        MOV	@#PONYX,@#PONYRENDERX   ; Запомним позицию рендера
 
         MOV	#SPRDIAMOND1,-(SP)   ; Спрайт
         MOV	#50,-(SP)   ; X
@@ -103,16 +156,18 @@ START:
         JSR PC, @#DRAWSPRITE
         ADD	#6, SP     ; Восстановить стек на 2*число аргументов
 
-        ; Затирание обратного хода с конца
-;        MOV	R1,R2
-;	ADD	#34,R2
-;        MOV	R2,-(SP)   ; X - в конце спрайта при обратном ходе
-;        MOV	#200,-(SP)  ; Y
-;        MOV	#1,-(SP)  ; DX - размер затираемой области по движению
-;        MOV	#40,-(SP)  ; DY
-;        JSR PC, @#CLEARZONE
-;        ADD	#10, SP     ; Восстановить стек на 2*число аргументов
+; ===== блок обновления состояния игры ======
+	ADD	@#PONYDX,@#PONYX ; Движение
+	CMP	@#PONYX,#0
+	BGE     NEXT_FRAME_1
+	MOV	#0,@#PONYX
+NEXT_FRAME_1:
+	CMP	@#PONYX,#340
+	BLE     NEXT_FRAME_2
+	MOV	#340,@#PONYX
+NEXT_FRAME_2:
 
+; ===== блок формирования длины фрейма ======
 TIMERCICLEWAIT:
         BIT	#200,@#177712 ; Тестируем признак прохода через ноль - бит 7
         BEQ	TIMERCICLEWAIT         ; Крутим, пока не дошли
@@ -122,8 +177,13 @@ TIMERCICLEWAIT:
 	HALT
 
 .include "proc_drawsprite.inc"
+.include "proc_keytester.inc"
 .include "sprites.inc"
 
+PONYX:      .WORD   0
+PONYRENDERX:      .WORD   0
+PONYDX:     .WORD   0
+PONYDIR:    .WORD   0
 .EVEN
 .END
 
