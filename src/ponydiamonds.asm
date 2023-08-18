@@ -1,17 +1,81 @@
 	.LINK 1000
 
         EMT     14
-	MOV    #233,R4  ; режим 32 символа
+	MOV    #233,R0  ; режим 32 символа
 	EMT    16
-	MOV    #232,R4  ; скрытие курсора
+	MOV    #232,R0  ; скрытие курсора
 	EMT    16
 	; Запрещаем прерывания от клавиатуры, чтобы не мешало игре
 	BIS	#100,@#177660 
 
+	; Начальная позиция пони, скорость, взгляд
 	MOV	#200,@#PONYX
 	MOV	@#PONYX,@#PONYRENDERX
 	MOV	#0,@#PONYDX
 	MOV	#4,@#PONYDIR
+
+        ; Инициализация массива ссылок на спрайты
+        MOV	#ARR_SPRITES,R0
+        MOV	#SPRDIAMOND1,(R0)
+        ADD	#2,R0
+        MOV	#SPRDIAMOND2,(R0)
+        ADD	#2,R0
+        MOV	#SPRDIAMOND3,(R0)
+        ADD	#2,R0
+        MOV	#SPRDIAMOND4,(R0)
+        ADD	#2,R0
+        MOV	#SPRDIAMOND5,(R0)
+        ADD	#2,R0
+        MOV	#SPRDIAMOND6,(R0)
+        ADD	#2,R0
+        MOV	#SPRDIAMOND7,(R0)
+        ADD	#2,R0
+        MOV	#SPRDIAMOND8,(R0)
+        ADD	#2,R0
+        MOV	#SPRDIAMOND9,(R0)
+        ADD	#2,R0
+        MOV	#SPRDIAMOND10,(R0)
+        ADD	#2,R0
+        MOV	#SPRDIAMOND11,(R0)
+        ADD	#2,R0
+        MOV	#SPRDIAMOND12,(R0)
+        ADD	#2,R0
+
+	; Инициализация массива алмазов
+	MOV	#ARR_DIAMONDS,R0
+        MOV	@#ARR_DIAMONDS_SIZE,R1
+CICLE_INIT:
+	MOV	#-1,(R0)
+	ADD	#2,R0
+	MOV	#0,(R0)
+	ADD	#2,R0
+	MOV	#0,(R0)
+	ADD	#2,R0
+	SOB 	R1,CICLE_INIT
+
+	; Временные данные алмазов	
+        MOV	#ARR_DIAMONDS,R0
+	MOV	#0,(R0)
+	ADD	#2,R0
+	MOV	#100,(R0)
+	ADD	#2,R0
+	MOV	#200,(R0)
+	ADD	#2,R0
+
+	MOV	#2,(R0)
+	ADD	#2,R0
+	MOV	#200,(R0)
+	ADD	#2,R0
+	MOV	#150,(R0)
+	ADD	#2,R0
+
+	MOV	#5,(R0)
+	ADD	#2,R0
+	MOV	#300,(R0)
+	ADD	#2,R0
+	MOV	#250,(R0)
+	ADD	#2,R0
+
 START:
 	MOV	#3777,@#177706  ; Длительность фрейма (3777 - примерно 10 FPS)
         MOV	#24,@#177712  ; Разрешаем счет и индикацию
@@ -84,77 +148,30 @@ DODRAWPONYSPR:
 
         MOV	@#PONYX,@#PONYRENDERX   ; Запомним позицию рендера
 
-        MOV	#SPRDIAMOND1,-(SP)   ; Спрайт
-        MOV	#50,-(SP)   ; X
-        MOV	#100,-(SP)  ; Y
+        ; Вывод алмазов
+	MOV	#ARR_DIAMONDS,R0
+        MOV	@#ARR_DIAMONDS_SIZE,R1
+CICLE_DIAMONDS_RENDER:
+	MOV	(R0),R2
+	CMP	R2,#-1
+	BEQ	SKIP_ARRAY_ELEM
+
+	MOV	#ARR_SPRITES,R3
+	ADD	R2,R3
+	ADD	R2,R3
+        MOV	(R3),-(SP)   ; Спрайт алмаза
+        ADD	#2,R0
+        MOV	(R0),-(SP)   ; X
+      	ADD	#2,R0
+        MOV	(R0),-(SP)  ; Y
+       	ADD	#2,R0
         JSR PC, @#DRAWSPRITE
         ADD	#6, SP     ; Восстановить стек на 2*число аргументов
 
-        MOV	#SPRDIAMOND2,-(SP)   ; Спрайт
-        MOV	#50,-(SP)   ; X
-        MOV	#200,-(SP)  ; Y
-        JSR PC, @#DRAWSPRITE
-        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
-
-        MOV	#SPRDIAMOND3,-(SP)   ; Спрайт
-        MOV	#150,-(SP)   ; X
-        MOV	#100,-(SP)  ; Y
-        JSR PC, @#DRAWSPRITE
-        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
-
-        MOV	#SPRDIAMOND4,-(SP)   ; Спрайт
-        MOV	#150,-(SP)   ; X
-        MOV	#200,-(SP)  ; Y
-        JSR PC, @#DRAWSPRITE
-        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
-
-        MOV	#SPRDIAMOND5,-(SP)   ; Спрайт
-        MOV	#250,-(SP)   ; X
-        MOV	#100,-(SP)  ; Y
-        JSR PC, @#DRAWSPRITE
-        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
-
-        MOV	#SPRDIAMOND6,-(SP)   ; Спрайт
-        MOV	#250,-(SP)   ; X
-        MOV	#200,-(SP)  ; Y
-        JSR PC, @#DRAWSPRITE
-        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
-
-        MOV	#SPRDIAMOND7,-(SP)   ; Спрайт
-        MOV	#50,-(SP)   ; X
-        MOV	#150,-(SP)  ; Y
-        JSR PC, @#DRAWSPRITE
-        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
-
-        MOV	#SPRDIAMOND8,-(SP)   ; Спрайт
-        MOV	#50,-(SP)   ; X
-        MOV	#250,-(SP)  ; Y
-        JSR PC, @#DRAWSPRITE
-        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
-
-        MOV	#SPRDIAMOND9,-(SP)   ; Спрайт
-        MOV	#150,-(SP)   ; X
-        MOV	#150,-(SP)  ; Y
-        JSR PC, @#DRAWSPRITE
-        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
-
-        MOV	#SPRDIAMOND10,-(SP)   ; Спрайт
-        MOV	#150,-(SP)   ; X
-        MOV	#250,-(SP)  ; Y
-        JSR PC, @#DRAWSPRITE
-        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
-
-        MOV	#SPRDIAMOND11,-(SP)   ; Спрайт
-        MOV	#250,-(SP)   ; X
-        MOV	#150,-(SP)  ; Y
-        JSR PC, @#DRAWSPRITE
-        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
-
-        MOV	#SPRDIAMOND12,-(SP)   ; Спрайт
-        MOV	#250,-(SP)   ; X
-        MOV	#250,-(SP)  ; Y
-        JSR PC, @#DRAWSPRITE
-        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
+        SOB 	R1,CICLE_DIAMONDS_RENDER
+SKIP_ARRAY_ELEM:
+        ADD	#6,R0
+	SOB 	R1,CICLE_DIAMONDS_RENDER
 
 ; ===== блок обновления состояния игры ======
 	ADD	@#PONYDX,@#PONYX ; Движение
@@ -184,7 +201,13 @@ PONYX:      .WORD   0
 PONYRENDERX:      .WORD   0
 PONYDX:     .WORD   0
 PONYDIR:    .WORD   0
+ARR_DIAMONDS_SIZE: .WORD 32
+ARR_DIAMONDS: .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
+              .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
+              .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
+              .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
+ARR_SPRITES: .WORD 0,0,0,0, 0,0,0,0, 0,0,0,0
 .EVEN
 .END
 
-make_bk0010_rom "ponydiamondsgame.bin", 1000
+make_bk0010_rom "ponydiamonds.bin", 1000
