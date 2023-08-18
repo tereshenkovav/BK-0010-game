@@ -16,65 +16,41 @@
 
         ; Инициализация массива ссылок на спрайты
         MOV	#ARR_SPRITES,R0
-        MOV	#SPRDIAMOND1,(R0)
-        ADD	#2,R0
-        MOV	#SPRDIAMOND2,(R0)
-        ADD	#2,R0
-        MOV	#SPRDIAMOND3,(R0)
-        ADD	#2,R0
-        MOV	#SPRDIAMOND4,(R0)
-        ADD	#2,R0
-        MOV	#SPRDIAMOND5,(R0)
-        ADD	#2,R0
-        MOV	#SPRDIAMOND6,(R0)
-        ADD	#2,R0
-        MOV	#SPRDIAMOND7,(R0)
-        ADD	#2,R0
-        MOV	#SPRDIAMOND8,(R0)
-        ADD	#2,R0
-        MOV	#SPRDIAMOND9,(R0)
-        ADD	#2,R0
-        MOV	#SPRDIAMOND10,(R0)
-        ADD	#2,R0
-        MOV	#SPRDIAMOND11,(R0)
-        ADD	#2,R0
-        MOV	#SPRDIAMOND12,(R0)
-        ADD	#2,R0
+        MOV	#SPRDIAMOND1,(R0)+
+        MOV	#SPRDIAMOND2,(R0)+
+        MOV	#SPRDIAMOND3,(R0)+
+        MOV	#SPRDIAMOND4,(R0)+
+        MOV	#SPRDIAMOND5,(R0)+
+        MOV	#SPRDIAMOND6,(R0)+
+        MOV	#SPRDIAMOND7,(R0)+
+        MOV	#SPRDIAMOND8,(R0)+
+        MOV	#SPRDIAMOND9,(R0)+
+        MOV	#SPRDIAMOND10,(R0)+
+        MOV	#SPRDIAMOND11,(R0)+
+        MOV	#SPRDIAMOND12,(R0)+
 
 	; Инициализация массива алмазов
 	MOV	#ARR_DIAMONDS,R0
         MOV	@#ARR_DIAMONDS_SIZE,R1
 CICLE_INIT:
-	MOV	#-1,(R0)
-	ADD	#2,R0
-	MOV	#0,(R0)
-	ADD	#2,R0
-	MOV	#0,(R0)
-	ADD	#2,R0
+	MOV	#-1,(R0)+
+	MOV	#0,(R0)+
+	MOV	#0,(R0)+
 	SOB 	R1,CICLE_INIT
 
 	; Временные данные алмазов	
         MOV	#ARR_DIAMONDS,R0
-	MOV	#0,(R0)
-	ADD	#2,R0
-	MOV	#100,(R0)
-	ADD	#2,R0
-	MOV	#200,(R0)
-	ADD	#2,R0
+	MOV	#0,(R0)+
+	MOV	#100,(R0)+
+	MOV	#200,(R0)+
 
-	MOV	#2,(R0)
-	ADD	#2,R0
-	MOV	#200,(R0)
-	ADD	#2,R0
-	MOV	#150,(R0)
-	ADD	#2,R0
+	MOV	#2,(R0)+
+	MOV	#200,(R0)+
+	MOV	#150,(R0)+
 
-	MOV	#5,(R0)
-	ADD	#2,R0
-	MOV	#300,(R0)
-	ADD	#2,R0
-	MOV	#250,(R0)
-	ADD	#2,R0
+	MOV	#5,(R0)+
+	MOV	#300,(R0)+
+	MOV	#250,(R0)+
 
 START:
 	MOV	#3777,@#177706  ; Длительность фрейма (3777 - примерно 10 FPS)
@@ -152,7 +128,7 @@ DODRAWPONYSPR:
 	MOV	#ARR_DIAMONDS,R0
         MOV	@#ARR_DIAMONDS_SIZE,R1
 CICLE_DIAMONDS_RENDER:
-	MOV	(R0),R2
+	MOV	(R0)+,R2
 	CMP	R2,#-1
 	BEQ	SKIP_ARRAY_ELEM
 
@@ -160,17 +136,14 @@ CICLE_DIAMONDS_RENDER:
 	ADD	R2,R3
 	ADD	R2,R3
         MOV	(R3),-(SP)   ; Спрайт алмаза
-        ADD	#2,R0
-        MOV	(R0),-(SP)   ; X
-      	ADD	#2,R0
-        MOV	(R0),-(SP)  ; Y
-       	ADD	#2,R0
+        MOV	(R0)+,-(SP)   ; X
+        MOV	(R0)+,-(SP)  ; Y
         JSR PC, @#DRAWSPRITE
         ADD	#6, SP     ; Восстановить стек на 2*число аргументов
 
         SOB 	R1,CICLE_DIAMONDS_RENDER
 SKIP_ARRAY_ELEM:
-        ADD	#6,R0
+        ADD	#4,R0
 	SOB 	R1,CICLE_DIAMONDS_RENDER
 
 ; ===== блок обновления состояния игры ======
