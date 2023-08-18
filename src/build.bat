@@ -1,1 +1,1 @@
-pdp11asm ponydiamondgame.asm
+pdp11asm ponydiamonds.asm
