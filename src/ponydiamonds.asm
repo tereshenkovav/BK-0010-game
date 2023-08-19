@@ -17,6 +17,18 @@ FILL_GROUND:
         MOV	#125252,(R0)+
 	SOB	R1,FILL_GROUND
 
+	MOV	#1,R1   ; позици€ курсора
+	MOV	#0,R2
+	EMT	24
+
+	MOV	#0,@#212  ; цвет и фон
+	MOV	#125252,@#214   
+
+	MOV	#MSGSCORE,R1     ; ¬ывод строки по умолчанию с нулем на конце
+	MOV	#0,R2
+	EMT	20
+
+        JSR PC, @#SUB_PRINTSCORE
 
 	; «апрещаем прерывани€ от клавиатуры, чтобы не мешало игре
 	BIS	#100,@#177660 
@@ -27,6 +39,7 @@ FILL_GROUND:
 	MOV	@#PONYX,@#PONYRENDERX
 	MOV	#0,@#PONYDX
 	MOV	#4,@#PONYDIR
+	MOV	#0,@#TEKSCORE
 
 	MOV	@#GENINTERVAL,@#GENCOUNTER
 
@@ -125,7 +138,7 @@ CICLE_DIAMONDS_CLEAR:
         MOV	(R0)+,R3
         SUB	@#DIAMONDSPEED,R3
         MOV	R3,-(SP)  ; Y
-        MOV	#40,-(SP)  ; DX 
+        MOV	#10,-(SP)  ; DX 
         MOV	@#DIAMONDSPEED,-(SP)  ; DY - размер затираемой области по движению
         JSR PC, @#CLEARZONE
         ADD	#10, SP     ; ¬осстановить стек на 2*число аргументов
@@ -208,10 +221,13 @@ CICLE_DIAMONDS_FRAME:
         MOV	(R0),R3
         SUB	@#DIAMONDSPEED,R3
         MOV	R3,-(SP)  ; Y
-        MOV	#40,-(SP)  ; DX 
+        MOV	#10,-(SP)  ; DX 
         MOV	#40,-(SP)  ; DY 
         JSR PC, @#CLEARZONE
         ADD	#10, SP     ; ¬осстановить стек на 2*число аргументов
+
+	ADD	#12,@#TEKSCORE
+	JSR PC, @#SUB_PRINTSCORE
 
 SKIP_REMOVE_DIAMOND:	
 	ADD	#2,R0
@@ -277,6 +293,8 @@ TIMERCICLEWAIT:
 .include "proc_drawsprite.inc"
 .include "proc_keytester.inc"
 .include "proc_genrnd.inc"
+.include "proc_int2str.inc"
+.include "sub_printscore.inc"
 .include "sprites.inc"
 
 PONYX:      .WORD   0
@@ -286,15 +304,18 @@ PONYDX:     .WORD   0
 PONYDIR:    .WORD   0
 DIAMONDSPEED:    .WORD   4
 LOWBORDER:    .WORD   320
-DIAMONDSTARTY:  .WORD   20
+DIAMONDSTARTY:  .WORD   34
 GENINTERVAL:	.WORD  14
 GENCOUNTER:    .WORD   0
+TEKSCORE:	.WORD	0
+STRBUF:    .BYTE   0,0,0,0,0,0 
 ARR_DIAMONDS_SIZE: .WORD 32
 ARR_DIAMONDS: .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
               .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
               .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
               .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
 ARR_SPRITES: .WORD 0,0,0,0, 0,0,0,0, 0,0,0,0
+MSGSCORE:    .ASCIZ  "SCORE:"
 .EVEN
 .END
 
