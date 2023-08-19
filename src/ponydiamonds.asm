@@ -42,15 +42,15 @@ CICLE_INIT:
         MOV	#ARR_DIAMONDS,R0
 	MOV	#0,(R0)+
 	MOV	#100,(R0)+
-	MOV	#200,(R0)+
+	MOV	#4,(R0)+
 
 	MOV	#2,(R0)+
 	MOV	#200,(R0)+
-	MOV	#150,(R0)+
+	MOV	#100,(R0)+
 
 	MOV	#5,(R0)+
 	MOV	#300,(R0)+
-	MOV	#250,(R0)+
+	MOV	#40,(R0)+
 
 START:
 	MOV	#3777,@#177706  ; Длительность фрейма (3777 - примерно 10 FPS)
@@ -108,6 +108,28 @@ END_KEY:
 
 NO_CLEARZONE:
 
+        ; Затирание алмазов
+	MOV	#ARR_DIAMONDS,R0
+        MOV	@#ARR_DIAMONDS_SIZE,R1
+CICLE_DIAMONDS_CLEAR:
+	MOV	(R0)+,R2
+	CMP	R2,#-1
+	BEQ	SKIP_ARRAY_ELEM3
+
+        MOV	(R0)+,-(SP)   ; X
+        MOV	(R0)+,R3
+        SUB	@#DIAMONDSPEED,R3
+        MOV	R3,-(SP)  ; Y
+        MOV	#40,-(SP)  ; DX 
+        MOV	#2,-(SP)  ; DY - размер затираемой области по движению
+        JSR PC, @#CLEARZONE
+        ADD	#10, SP     ; Восстановить стек на 2*число аргументов
+        
+        SOB 	R1,CICLE_DIAMONDS_CLEAR
+SKIP_ARRAY_ELEM3:
+        ADD	#4,R0
+	SOB 	R1,CICLE_DIAMONDS_CLEAR
+
 ; ===== блок рендера ======
 
         CMP	@#PONYDIR,#4      ; Выбор типа спрайта
@@ -157,6 +179,44 @@ NEXT_FRAME_1:
 	MOV	#340,@#PONYX
 NEXT_FRAME_2:
 
+        ; обсчет алмазов
+	MOV	#ARR_DIAMONDS,R0
+        MOV	@#ARR_DIAMONDS_SIZE,R1
+CICLE_DIAMONDS_FRAME:
+	MOV	(R0)+,R2
+	CMP	R2,#-1
+	BEQ	SKIP_ARRAY_ELEM2
+
+        ADD	#2,R0
+        ; Добавляем скорость
+        ADD	@#DIAMONDSPEED,(R0)
+
+        ; Если нужно, помечаем алмаз как удаленный
+        CMP	(R0),@#LOWBORDER
+        BNE	SKIP_REMOVE_DIAMOND
+
+        SUB	#4,R0
+	MOV	#-1,(R0)+
+
+	; И затираем его
+        MOV	(R0)+,-(SP)   ; X
+        MOV	(R0),R3
+        SUB	@#DIAMONDSPEED,R3
+        MOV	R3,-(SP)  ; Y
+        MOV	#40,-(SP)  ; DX 
+        MOV	#40,-(SP)  ; DY 
+        JSR PC, @#CLEARZONE
+        ADD	#10, SP     ; Восстановить стек на 2*число аргументов
+
+SKIP_REMOVE_DIAMOND:	
+	ADD	#2,R0
+
+        SOB 	R1,CICLE_DIAMONDS_FRAME
+SKIP_ARRAY_ELEM2:
+        ADD	#4,R0
+	SOB 	R1,CICLE_DIAMONDS_FRAME
+
+
 ; ===== блок формирования длины фрейма ======
 TIMERCICLEWAIT:
         BIT	#200,@#177712 ; Тестируем признак прохода через ноль - бит 7
@@ -174,6 +234,8 @@ PONYX:      .WORD   0
 PONYRENDERX:      .WORD   0
 PONYDX:     .WORD   0
 PONYDIR:    .WORD   0
+DIAMONDSPEED:    .WORD   2
+LOWBORDER:    .WORD   300
 ARR_DIAMONDS_SIZE: .WORD 32
 ARR_DIAMONDS: .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
               .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
