@@ -5,11 +5,25 @@
 	EMT    16
 	MOV    #232,R0  ; скрытие курсора
 	EMT    16
+
+	MOV	#40000,R0
+	MOV	#17000,R1
+FILL_ZERO:
+        MOV	#0,(R0)+
+	SOB	R1,FILL_ZERO
+
+	MOV	#1000,R1
+FILL_GROUND:
+        MOV	#125252,(R0)+
+	SOB	R1,FILL_GROUND
+
+
 	; Запрещаем прерывания от клавиатуры, чтобы не мешало игре
 	BIS	#100,@#177660 
 
 	; Начальная позиция пони, скорость, взгляд
 	MOV	#200,@#PONYX
+	MOV	#320,@#PONYY
 	MOV	@#PONYX,@#PONYRENDERX
 	MOV	#0,@#PONYDX
 	MOV	#4,@#PONYDIR
@@ -81,7 +95,7 @@ END_KEY:
 
 	; Затирание прямого хода
         MOV	@#PONYRENDERX,-(SP)   ; X
-        MOV	#300,-(SP)  ; Y
+        MOV	@#PONYY,-(SP)  ; Y
         MOV	#1,-(SP)  ; DX - размер затираемой области по движению
         MOV	#40,-(SP)  ; DY
         JSR PC, @#CLEARZONE
@@ -91,7 +105,7 @@ END_KEY:
         MOV	@#PONYRENDERX,R0
 	ADD	#34,R0
         MOV	R0,-(SP)   ; X - в конце спрайта при обратном ходе
-        MOV	#300,-(SP)  ; Y
+        MOV	@#PONYY,-(SP)  ; Y
         MOV	#1,-(SP)  ; DX - размер затираемой области по движению
         MOV	#40,-(SP)  ; DY
         JSR PC, @#CLEARZONE
@@ -131,7 +145,7 @@ MIRRPONYSPR:
         MOV	#SPRUNICORN_MIRR,-(SP)   ; Спрайт
 DODRAWPONYSPR:
         MOV	@#PONYX,-(SP)   ; X
-        MOV	#300,-(SP)  ; Y
+        MOV	@#PONYY,-(SP)  ; Y
         JSR PC, @#DRAWSPRITE
         ADD	#6, SP     ; Восстановить стек на 2*число аргументов
 
@@ -242,7 +256,7 @@ NO_SUB_RND2:
 
        	MOV	R3,(R0)+
 	MOV	R4,(R0)+
-	MOV	#10,(R0)
+	MOV	@#DIAMONDSTARTY,(R0)
 
         JMP	SKIP_NEW_DIAMOND
 SKIP_ARRAY_ELEM4:
@@ -266,11 +280,13 @@ TIMERCICLEWAIT:
 .include "sprites.inc"
 
 PONYX:      .WORD   0
+PONYY:      .WORD   0
 PONYRENDERX:      .WORD   0
 PONYDX:     .WORD   0
 PONYDIR:    .WORD   0
 DIAMONDSPEED:    .WORD   4
-LOWBORDER:    .WORD   300
+LOWBORDER:    .WORD   320
+DIAMONDSTARTY:  .WORD   20
 GENINTERVAL:	.WORD  14
 GENCOUNTER:    .WORD   0
 ARR_DIAMONDS_SIZE: .WORD 32
