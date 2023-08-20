@@ -2,7 +2,6 @@ SUB_HITBOX:
         MOV	R0,-(SP)
         MOV	R1,-(SP)
         MOV	R2,-(SP)
-        MOV	R3,-(SP)
         
         MOV	R4,R0  ; X алмаза
         MOV	R5,R1  ; Y алмаза
@@ -29,8 +28,11 @@ CMP_ABS_DIST:
 	CMP	#40,R2
 	BLT	PONY_HIT_BOX
 
+	MOV	#ARR_SCORES,R0 ; Вычисляем позицию в массиве очков по спрайтам
+	ADD	R3,R0
+	ADD	R3,R0
         MOV	#1,R4  ; Убрать и начислить очки
-        MOV	#12,R5  
+        MOV	(R0),R5
 
         JMP 	END_HIT_BOX
 
@@ -43,7 +45,6 @@ PONY_HIT_BOX:
 
 END_HIT_BOX:
 
-	MOV     (SP)+,R3
 	MOV     (SP)+,R2
 	MOV     (SP)+,R1
 	MOV     (SP)+,R0

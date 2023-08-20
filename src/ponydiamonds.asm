@@ -213,6 +213,7 @@ CICLE_DIAMONDS_FRAME:
         ADD	@#DIAMONDSPEED,(R0)
 
         ; Если нужно, помечаем алмаз как удаленный
+        MOV	R2,R3   ; idx
         MOV	(R0),R5   ; Y
         JSR PC, @#SUB_HITBOX
         CMP	R4,#0
@@ -342,6 +343,7 @@ ARR_DIAMONDS: .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
               .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
               .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
 ARR_SPRITES: .WORD 0,0,0,0, 0,0,0,0, 0,0,0,0
+ARR_SCORES:  .WORD 1,2,3, 4,5,6, 7,10,11, 12,13,14
 MSGSCORE:    .ASCIZ  "SCORE:"
 MSGDIAMONDS: .ASCIZ  "DIAMONDS:"
 MSGGAMEOVER: .ASCIZ  "GAME OVER, PRESS ENTER TO MENU"
