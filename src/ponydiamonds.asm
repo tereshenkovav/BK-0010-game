@@ -208,13 +208,15 @@ CICLE_DIAMONDS_FRAME:
 	CMP	R2,#-1
 	BEQ	SKIP_ARRAY_ELEM2
 
-        ADD	#2,R0
-        ; Добавляем скорость
+	MOV	(R0)+,R4 ; Запомним X в R4 для хитбокса
+        ; Добавляем скорость к Y
         ADD	@#DIAMONDSPEED,(R0)
 
         ; Если нужно, помечаем алмаз как удаленный
-        CMP	(R0),@#LOWBORDER
-        BNE	SKIP_REMOVE_DIAMOND
+        MOV	(R0),R5   ; Y
+        JSR PC, @#SUB_HITBOX
+        CMP	R4,#0
+        BEQ	SKIP_REMOVE_DIAMOND
 
         SUB	#4,R0
 	MOV	#-1,(R0)+
@@ -229,7 +231,7 @@ CICLE_DIAMONDS_FRAME:
         JSR PC, @#CLEARZONE
         ADD	#10, SP     ; Восстановить стек на 2*число аргументов
 
-	ADD	#12,@#TEKSCORE
+	ADD	R5,@#TEKSCORE
 	DEC	@#DIAMONDSONAIR
 	JSR PC, @#SUB_PRINTSCORE
         JSR PC, @#SUB_PRINTDIAMONDS
@@ -315,6 +317,7 @@ TIMERCICLEWAIT:
 .include "proc_genrnd.inc"
 .include "proc_int2str.inc"
 .include "sub_prints.inc"
+.include "sub_hitbox.inc"
 .include "sprites.inc"
 
 PONYX:      .WORD   0
@@ -331,6 +334,7 @@ GENINTERVAL:	.WORD  14
 GENCOUNTER:    .WORD   0
 TEKSCORE:	.WORD	0
 GAMEOVER:	.WORD	0
+DEBUG:	.WORD	0
 STRBUF:    .BYTE   0,0,0,0,0,0 
 ARR_DIAMONDS_SIZE: .WORD 32
 ARR_DIAMONDS: .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
@@ -340,7 +344,7 @@ ARR_DIAMONDS: .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
 ARR_SPRITES: .WORD 0,0,0,0, 0,0,0,0, 0,0,0,0
 MSGSCORE:    .ASCIZ  "SCORE:"
 MSGDIAMONDS: .ASCIZ  "DIAMONDS:"
-MSGGAMEOVER: .ASCIZ  "GAME OVER, PRESS ENTER TO EXIT"
+MSGGAMEOVER: .ASCIZ  "GAME OVER, PRESS ENTER TO MENU"
 .EVEN
 .END
 
