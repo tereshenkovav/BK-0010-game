@@ -62,7 +62,9 @@ FILL_ZERO0:
         JSR PC, @#DRAWSPRITE
         ADD	#6, SP     ; Восстановить стек на 2*число аргументов
 
+	MOV	#0,R5  ; Накопление случайного значения
 MENU_KEY_WAIT:
+        INC	R5
         JSR PC, @#KEY_TESTER
 
 	CMP	R1,#0       ;не было нажатий и нет удержания
@@ -102,6 +104,9 @@ MENU_HELP_WAIT:
         JMP MAIN_MENU_ENTRY
 
 GAME_START_ENTRY:
+        MOV	R5,R0 ; Начальное значение генерации
+        JSR PC, @#SETRNDSEED
+
 	; Очистка экрана
 	MOV	#40000,R0
 	MOV	#17000,R1
@@ -130,9 +135,6 @@ FILL_GROUND:
 	JSR PC, @#SUB_PRINTCAPTIONS
         JSR PC, @#SUB_PRINTSCORE
         JSR PC, @#SUB_PRINTDIAMONDS
-
-        MOV	#123,R0 ; Начальное значение генерации
-        JSR PC, @#SETRNDSEED
 
 	; Инициализация массива алмазов
 	MOV	#ARR_DIAMONDS,R0
