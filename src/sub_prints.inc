@@ -110,3 +110,44 @@ SUB_PRINTDEBUG:
 	MOV     (SP)+,R1
 
         RTS PC
+
+SUB_PRINTMENU:
+        MOV	R1,-(SP)
+        MOV	R2,-(SP)
+
+	MOV	#4,R1   ; позиция курсора
+	MOV	#5,R2
+	EMT	24
+
+	MOV	#MSGTITLE,R1     ; Вывод строки по умолчанию с нулем на конце
+	MOV	#0,R2
+	EMT	20
+
+	MOV	#14,R1   ; позиция курсора
+	MOV	#10,R2
+	EMT	24
+
+	MOV	#MSGMENUSTART,R1     ; Вывод строки по умолчанию с нулем на конце
+	MOV	#0,R2
+	EMT	20
+
+	MOV	#14,R1   ; позиция курсора
+	MOV	#11,R2
+	EMT	24
+
+	MOV	#MSGMENUHELP,R1     ; Вывод строки по умолчанию с нулем на конце
+	MOV	#0,R2
+	EMT	20
+
+	MOV	#14,R1   ; позиция курсора
+	MOV	#12,R2
+	EMT	24
+
+	MOV	#MSGMENUEXIT,R1     ; Вывод строки по умолчанию с нулем на конце
+	MOV	#0,R2
+	EMT	20
+
+	MOV     (SP)+,R2
+	MOV     (SP)+,R1
+
+        RTS PC

@@ -6,6 +6,79 @@
 	MOV    #232,R0  ; скрытие курсора
 	EMT    16
 
+	MOV	#0,@#212  ; цвет и фон
+	MOV	#125252,@#214   
+
+	; Запрещаем прерывания от клавиатуры, чтобы не мешало игре
+	BIS	#100,@#177660 
+
+        ; Инициализация массива ссылок на спрайты
+        MOV	#ARR_SPRITES,R0
+        MOV	#SPRDIAMOND7,(R0)+
+        MOV	#SPRDIAMOND9,(R0)+
+        MOV	#SPRDIAMOND11,(R0)+
+        MOV	#SPRDIAMOND8,(R0)+
+        MOV	#SPRDIAMOND10,(R0)+
+        MOV	#SPRDIAMOND12,(R0)+
+        MOV	#SPRDIAMOND1,(R0)+
+        MOV	#SPRDIAMOND3,(R0)+
+        MOV	#SPRDIAMOND5,(R0)+
+        MOV	#SPRDIAMOND2,(R0)+
+        MOV	#SPRDIAMOND4,(R0)+
+        MOV	#SPRDIAMOND6,(R0)+
+
+MAIN_MENU_ENTRY:
+	; Очистка экрана 100%
+	MOV	#40000,R0
+	MOV	#20000,R1
+FILL_ZERO0:
+        MOV	#0,(R0)+
+	SOB	R1,FILL_ZERO0
+
+	JSR PC, @#SUB_PRINTMENU
+
+	MOV	#ARR_SPRITES,R2	
+        MOV	(R2)+,-(SP)   ; Спрайт алмаза
+        MOV	#70,-(SP)   ; X
+        MOV	#30,-(SP)  ; Y
+        JSR PC, @#DRAWSPRITE
+        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
+
+        MOV	(R2)+,-(SP)   ; Спрайт алмаза
+        MOV	#170,-(SP)   ; X
+        MOV	#30,-(SP)  ; Y
+        JSR PC, @#DRAWSPRITE
+        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
+
+        MOV	(R2)+,-(SP)   ; Спрайт алмаза
+        MOV	#270,-(SP)   ; X
+        MOV	#30,-(SP)  ; Y
+        JSR PC, @#DRAWSPRITE
+        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
+
+MENU_KEY_WAIT:
+        JSR PC, @#KEY_TESTER
+
+	CMP	R1,#0       ;не было нажатий и нет удержания
+        BEQ     MENU_KEY_WAIT
+
+        ; Иначе парсим
+	CMP	R0,#61      ; клавиша "1"
+	BNE     KEYMENU1
+        JMP 	GAME_START_ENTRY
+KEYMENU1:
+	CMP	R0,#62      ; клавиша "2"
+	BNE     KEYMENU2
+        JMP 	GAME_START_ENTRY
+KEYMENU2:
+	CMP	R0,#60      ; клавиша "0"
+	BNE     KEYMENU3
+	HALT
+KEYMENU3:
+       	JMP 	MENU_KEY_WAIT
+
+GAME_START_ENTRY:
+	; Очистка экрана
 	MOV	#40000,R0
 	MOV	#17000,R1
 FILL_ZERO:
@@ -16,12 +89,6 @@ FILL_ZERO:
 FILL_GROUND:
         MOV	#125252,(R0)+
 	SOB	R1,FILL_GROUND
-
-	MOV	#0,@#212  ; цвет и фон
-	MOV	#125252,@#214   
-
-	; Запрещаем прерывания от клавиатуры, чтобы не мешало игре
-	BIS	#100,@#177660 
 
 	; Начальная позиция пони, скорость, взгляд
 	MOV	#200,@#PONYX
@@ -42,22 +109,6 @@ FILL_GROUND:
 
         MOV	#123,R0 ; Начальное значение генерации
         JSR PC, @#SETRNDSEED
-
-        ; Инициализация массива ссылок на спрайты
-        MOV	#ARR_SPRITES,R0
-        MOV	#SPRDIAMOND7,(R0)+
-        MOV	#SPRDIAMOND9,(R0)+
-        MOV	#SPRDIAMOND11,(R0)+
-        MOV	#SPRDIAMOND8,(R0)+
-        MOV	#SPRDIAMOND10,(R0)+
-        MOV	#SPRDIAMOND12,(R0)+
-        MOV	#SPRDIAMOND1,(R0)+
-        MOV	#SPRDIAMOND3,(R0)+
-        MOV	#SPRDIAMOND5,(R0)+
-        MOV	#SPRDIAMOND2,(R0)+
-        MOV	#SPRDIAMOND4,(R0)+
-        MOV	#SPRDIAMOND6,(R0)+
-
 
 	; Инициализация массива алмазов
 	MOV	#ARR_DIAMONDS,R0
@@ -100,7 +151,7 @@ KEYSTEP3:
 	BNE     KEYSTEP4
 	CMP	#1,@#GAMEOVER
 	BNE	KEYSTEP4
-       	HALT
+       	JMP	MAIN_MENU_ENTRY
 KEYSTEP4:
 
 END_KEY:        
@@ -348,6 +399,10 @@ ARR_SCORES:  .WORD 12,24,36, 24,50,74, 24,50,74, 50,120,170
 MSGSCORE:    .ASCIZ  "SCORE:"
 MSGDIAMONDS: .ASCIZ  "DIAMONDS:"
 MSGGAMEOVER: .ASCIZ  "GAME OVER, PRESS ENTER TO MENU"
+MSGTITLE: .ASCIZ  "THE UNICORN AND DIAMONDS"
+MSGMENUSTART: .ASCIZ  "1 - START"
+MSGMENUHELP: .ASCIZ  "2 - HELP"
+MSGMENUEXIT: .ASCIZ  "0 - EXIT"
 .EVEN
 .END
 
