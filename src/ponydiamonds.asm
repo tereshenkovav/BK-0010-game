@@ -45,18 +45,19 @@ FILL_GROUND:
 
         ; Инициализация массива ссылок на спрайты
         MOV	#ARR_SPRITES,R0
-        MOV	#SPRDIAMOND1,(R0)+
-        MOV	#SPRDIAMOND2,(R0)+
-        MOV	#SPRDIAMOND3,(R0)+
-        MOV	#SPRDIAMOND4,(R0)+
-        MOV	#SPRDIAMOND5,(R0)+
-        MOV	#SPRDIAMOND6,(R0)+
         MOV	#SPRDIAMOND7,(R0)+
-        MOV	#SPRDIAMOND8,(R0)+
         MOV	#SPRDIAMOND9,(R0)+
-        MOV	#SPRDIAMOND10,(R0)+
         MOV	#SPRDIAMOND11,(R0)+
+        MOV	#SPRDIAMOND8,(R0)+
+        MOV	#SPRDIAMOND10,(R0)+
         MOV	#SPRDIAMOND12,(R0)+
+        MOV	#SPRDIAMOND1,(R0)+
+        MOV	#SPRDIAMOND3,(R0)+
+        MOV	#SPRDIAMOND5,(R0)+
+        MOV	#SPRDIAMOND2,(R0)+
+        MOV	#SPRDIAMOND4,(R0)+
+        MOV	#SPRDIAMOND6,(R0)+
+
 
 	; Инициализация массива алмазов
 	MOV	#ARR_DIAMONDS,R0
@@ -343,7 +344,7 @@ ARR_DIAMONDS: .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
               .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
               .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
 ARR_SPRITES: .WORD 0,0,0,0, 0,0,0,0, 0,0,0,0
-ARR_SCORES:  .WORD 1,2,3, 4,5,6, 7,10,11, 12,13,14
+ARR_SCORES:  .WORD 12,24,36, 24,50,74, 24,50,74, 50,120,170
 MSGSCORE:    .ASCIZ  "SCORE:"
 MSGDIAMONDS: .ASCIZ  "DIAMONDS:"
 MSGGAMEOVER: .ASCIZ  "GAME OVER, PRESS ENTER TO MENU"
