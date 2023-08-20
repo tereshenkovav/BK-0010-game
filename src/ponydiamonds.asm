@@ -56,6 +56,12 @@ FILL_ZERO0:
         JSR PC, @#DRAWSPRITE
         ADD	#6, SP     ; Восстановить стек на 2*число аргументов
 
+        MOV	#SPRUNICORN,-(SP)   ; Спрайт
+        MOV	#154,-(SP)   ; X
+        MOV	#240,-(SP)  ; Y
+        JSR PC, @#DRAWSPRITE
+        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
+
 MENU_KEY_WAIT:
         JSR PC, @#KEY_TESTER
 
