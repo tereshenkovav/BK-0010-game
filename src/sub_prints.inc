@@ -66,6 +66,10 @@ SUB_PRINTDIAMONDS:
 	MOV	#0,R2               
 	EMT	20               
 
+	MOV	#SPACEBUF,R1     ; ¬ывод строки по умолчанию с нулем на конце
+	MOV	#0,R2               
+	EMT	20               
+
 	MOV     (SP)+,R2
 	MOV     (SP)+,R1
 

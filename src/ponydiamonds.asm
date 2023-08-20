@@ -310,6 +310,11 @@ CICLE_DIAMONDS_FRAME:
         JSR PC, @#CLEARZONE
         ADD	#10, SP     ; Восстановить стек на 2*число аргументов
 
+	CMP	R5,#0
+	BEQ	NO_PLAY_SOUND
+        JSR PC, @#SOUND_PLAY_HIT
+NO_PLAY_SOUND:
+
 	ADD	R5,@#TEKSCORE
 	DEC	@#DIAMONDSONAIR
 	JSR PC, @#SUB_PRINTSCORE
@@ -320,7 +325,7 @@ CICLE_DIAMONDS_FRAME:
         CMP	R3,#0
 	BNE	SKIP_REMOVE_DIAMOND
 
-	MOV	#1,@#GAMEOVER
+	MOV	#1,@#ONCEPLAY
 	JSR PC, @#SUB_PRINTGAMEOVER
 
 SKIP_REMOVE_DIAMOND:	
@@ -381,6 +386,12 @@ SKIP_ARRAY_ELEM4:
 	SOB 	R1,CICLE_DIAMONDS_NEW
 
 SKIP_NEW_DIAMOND:
+
+	CMP 	@#ONCEPLAY,#0
+	BEQ	TIMERCICLEWAIT
+	MOV     #0,@#ONCEPLAY
+	MOV     #1,@#GAMEOVER
+	JSR PC, @#SOUND_PLAY_GAMEOVER
 	
 ; ===== блок формирования длины фрейма ======
 TIMERCICLEWAIT:
@@ -388,9 +399,80 @@ TIMERCICLEWAIT:
         BEQ	TIMERCICLEWAIT         ; Крутим, пока не дошли
 
 	JMP 	START
+        	
+SOUND_PLAY_HIT:
 
-	HALT
+        MOV	R0,-(SP)
+        MOV	R1,-(SP)
+        MOV	R2,-(SP)
 
+	MOV	#37,R0  ; count of impulse
+	MOV	#47,R1  ; len impulse      
+MS03:	MOV 	#100,@#177716 ; speaker on 
+	MOV 	R1,R2
+MS01:	NOP
+	SOB	R2,MS01
+	MOV	#0,@#177716   ; speaker off
+	MOV	R1,R2
+MS02:	NOP
+	SOB	R2,MS02
+	SOB	R0,MS03
+
+	MOV     (SP)+,R2
+	MOV     (SP)+,R1
+	MOV     (SP)+,R0
+
+	RTS PC
+
+SOUND_PLAY_GAMEOVER:
+
+        MOV	R0,-(SP)
+        MOV	R1,-(SP)
+        MOV	R2,-(SP)
+
+	MOV	#277,R0  ; count of impulse
+	MOV	#47,R1  ; len impulse      
+MS03:	MOV 	#100,@#177716 ; speaker on 
+	MOV 	R1,R2
+MS01:	NOP
+	SOB	R2,MS01
+	MOV	#0,@#177716   ; speaker off
+	MOV	R1,R2
+MS02:	NOP
+	SOB	R2,MS02
+	SOB	R0,MS03
+
+	MOV	#177,R0  ; count of impulse
+	MOV	#77,R1  ; len impulse      
+MS13:	MOV 	#100,@#177716 ; speaker on 
+	MOV 	R1,R2
+MS11:	NOP
+	SOB	R2,MS11
+	MOV	#0,@#177716   ; speaker off
+	MOV	R1,R2
+MS12:	NOP
+	SOB	R2,MS12
+	SOB	R0,MS13
+
+	MOV	#77,R0  ; count of impulse
+	MOV	#147,R1  ; len impulse      
+MS23:	MOV 	#100,@#177716 ; speaker on 
+	MOV 	R1,R2
+MS21:	NOP
+	SOB	R2,MS21
+	MOV	#0,@#177716   ; speaker off
+	MOV	R1,R2
+MS22:	NOP
+	SOB	R2,MS22
+	SOB	R0,MS23
+
+	MOV     (SP)+,R2
+	MOV     (SP)+,R1
+	MOV     (SP)+,R0
+
+	RTS PC
+
+        
 .include "proc_drawsprite.inc"
 .include "proc_keytester.inc"
 .include "proc_genrnd.inc"
@@ -413,9 +495,11 @@ GENINTERVAL:	.WORD  14
 GENCOUNTER:    .WORD   0
 TEKSCORE:	.WORD	0
 GAMEOVER:	.WORD	0
+ONCEPLAY:	.WORD   0
 TOTALDIAMONDSINGAME .WORD 100
 DEBUG:	.WORD	0
 STRBUF:    .BYTE   0,0,0,0,0,0 
+SPACEBUF:    .ASCIZ "   "
 ARR_DIAMONDS_SIZE: .WORD 32
 ARR_DIAMONDS: .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
               .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
