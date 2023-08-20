@@ -69,13 +69,31 @@ MENU_KEY_WAIT:
 KEYMENU1:
 	CMP	R0,#62      ; клавиша "2"
 	BNE     KEYMENU2
-        JMP 	GAME_START_ENTRY
+        JMP 	HELP_ENTRY
 KEYMENU2:
 	CMP	R0,#60      ; клавиша "0"
 	BNE     KEYMENU3
 	HALT
 KEYMENU3:
        	JMP 	MENU_KEY_WAIT
+
+HELP_ENTRY:
+	; Очистка экрана 100%
+	MOV	#40000,R0
+	MOV	#20000,R1
+FILL_ZERO2:
+        MOV	#0,(R0)+
+	SOB	R1,FILL_ZERO2
+
+	JSR PC, @#SUB_PRINTHELP
+
+MENU_HELP_WAIT:
+        JSR PC, @#KEY_TESTER
+
+	CMP	R1,#0       ;не было нажатий и нет удержания
+        BEQ     MENU_HELP_WAIT
+
+        JMP MAIN_MENU_ENTRY
 
 GAME_START_ENTRY:
 	; Очистка экрана
