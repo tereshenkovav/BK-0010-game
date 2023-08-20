@@ -27,7 +27,7 @@ SUB_PRINTSCORE:
         MOV	R1,-(SP)
         MOV	R2,-(SP)
 
-	MOV	#10,R1   ; позиция курсора
+	MOV	#7,R1   ; позиция курсора
 	MOV	#0,R2
 	EMT	24
 
@@ -50,7 +50,7 @@ SUB_PRINTDIAMONDS:
         MOV	R1,-(SP)
         MOV	R2,-(SP)
 
-	MOV	#27,R1   ; позиция курсора
+	MOV	#25,R1   ; позиция курсора
 	MOV	#0,R2
 	EMT	24
 
@@ -123,7 +123,7 @@ SUB_PRINTMENU:
 	MOV	#0,R2
 	EMT	20
 
-	MOV	#14,R1   ; позиция курсора
+	MOV	#12,R1   ; позиция курсора
 	MOV	#10,R2
 	EMT	24
 
@@ -131,7 +131,7 @@ SUB_PRINTMENU:
 	MOV	#0,R2
 	EMT	20
 
-	MOV	#14,R1   ; позиция курсора
+	MOV	#12,R1   ; позиция курсора
 	MOV	#11,R2
 	EMT	24
 
@@ -139,7 +139,7 @@ SUB_PRINTMENU:
 	MOV	#0,R2
 	EMT	20
 
-	MOV	#14,R1   ; позиция курсора
+	MOV	#12,R1   ; позиция курсора
 	MOV	#12,R2
 	EMT	24
 

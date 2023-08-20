@@ -1,0 +1,7 @@
+MSGSCORE:    .ASCIZ  "нвйх:"
+MSGDIAMONDS: .ASCIZ  "юклюгш:"
+MSGGAMEOVER: .ASCIZ  "йнмеж хцпш, Enter - б лемч"
+MSGTITLE: .ASCIZ  "хцпю: едхмнпнц х юклюгш"
+MSGMENUSTART: .ASCIZ  "1 - ярюпр"
+MSGMENUHELP: .ASCIZ  "2 - онлныэ"
+MSGMENUEXIT: .ASCIZ  "0 - бшунд"

@@ -1,2 +1,3 @@
 *.bin
 *.lst
+src/strings-*.inc
