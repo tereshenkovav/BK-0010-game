@@ -17,18 +17,8 @@ FILL_GROUND:
         MOV	#125252,(R0)+
 	SOB	R1,FILL_GROUND
 
-	MOV	#1,R1   ; позиция курсора
-	MOV	#0,R2
-	EMT	24
-
 	MOV	#0,@#212  ; цвет и фон
 	MOV	#125252,@#214   
-
-	MOV	#MSGSCORE,R1     ; Вывод строки по умолчанию с нулем на конце
-	MOV	#0,R2
-	EMT	20
-
-        JSR PC, @#SUB_PRINTSCORE
 
 	; Запрещаем прерывания от клавиатуры, чтобы не мешало игре
 	BIS	#100,@#177660 
@@ -40,8 +30,15 @@ FILL_GROUND:
 	MOV	#0,@#PONYDX
 	MOV	#4,@#PONYDIR
 	MOV	#0,@#TEKSCORE
+	MOV	#10,@#DIAMONDSDROP
+	MOV	#0,@#DIAMONDSONAIR
+	MOV	#0,@#GAMEOVER
 
 	MOV	@#GENINTERVAL,@#GENCOUNTER
+
+	JSR PC, @#SUB_PRINTCAPTIONS
+        JSR PC, @#SUB_PRINTSCORE
+        JSR PC, @#SUB_PRINTDIAMONDS
 
         MOV	#123,R0 ; Начальное значение генерации
         JSR PC, @#SETRNDSEED
@@ -98,6 +95,12 @@ KEYSTEP2:
 	BNE     KEYSTEP3
        	MOV	#0,@#PONYDX ; Смена скорости
 KEYSTEP3:
+	CMP	R0,#12      ; клавиша "ввод"?
+	BNE     KEYSTEP4
+	CMP	#1,@#GAMEOVER
+	BNE	KEYSTEP4
+       	HALT
+KEYSTEP4:
 
 END_KEY:        
 
@@ -227,7 +230,17 @@ CICLE_DIAMONDS_FRAME:
         ADD	#10, SP     ; Восстановить стек на 2*число аргументов
 
 	ADD	#12,@#TEKSCORE
+	DEC	@#DIAMONDSONAIR
 	JSR PC, @#SUB_PRINTSCORE
+        JSR PC, @#SUB_PRINTDIAMONDS
+
+        MOV	@#DIAMONDSONAIR,R3
+        ADD	@#DIAMONDSDROP,R3
+        CMP	R3,#0
+	BNE	SKIP_REMOVE_DIAMOND
+
+	MOV	#1,@#GAMEOVER
+	JSR PC, @#SUB_PRINTGAMEOVER
 
 SKIP_REMOVE_DIAMOND:	
 	ADD	#2,R0
@@ -238,11 +251,18 @@ SKIP_ARRAY_ELEM2:
 	SOB 	R1,CICLE_DIAMONDS_FRAME
 
 	; Генерация новых алмазов
+	CMP	@#DIAMONDSDROP,#0
+	BEQ	SKIP_NEW_DIAMOND
+
 	DEC	@#GENCOUNTER
 	CMP	@#GENCOUNTER,#0
 	BNE	SKIP_NEW_DIAMOND
 	
 	MOV	@#GENINTERVAL,@#GENCOUNTER
+	DEC	@#DIAMONDSDROP
+	INC	@#DIAMONDSONAIR
+
+        JSR PC, @#SUB_PRINTDIAMONDS
 	
 	MOV	#ARR_DIAMONDS,R0
         MOV	@#ARR_DIAMONDS_SIZE,R1
@@ -294,7 +314,7 @@ TIMERCICLEWAIT:
 .include "proc_keytester.inc"
 .include "proc_genrnd.inc"
 .include "proc_int2str.inc"
-.include "sub_printscore.inc"
+.include "sub_prints.inc"
 .include "sprites.inc"
 
 PONYX:      .WORD   0
@@ -305,9 +325,12 @@ PONYDIR:    .WORD   0
 DIAMONDSPEED:    .WORD   4
 LOWBORDER:    .WORD   320
 DIAMONDSTARTY:  .WORD   34
+DIAMONDSDROP:  .WORD   0
+DIAMONDSONAIR:  .WORD   0
 GENINTERVAL:	.WORD  14
 GENCOUNTER:    .WORD   0
 TEKSCORE:	.WORD	0
+GAMEOVER:	.WORD	0
 STRBUF:    .BYTE   0,0,0,0,0,0 
 ARR_DIAMONDS_SIZE: .WORD 32
 ARR_DIAMONDS: .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
@@ -316,6 +339,8 @@ ARR_DIAMONDS: .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
               .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
 ARR_SPRITES: .WORD 0,0,0,0, 0,0,0,0, 0,0,0,0
 MSGSCORE:    .ASCIZ  "SCORE:"
+MSGDIAMONDS: .ASCIZ  "DIAMONDS:"
+MSGGAMEOVER: .ASCIZ  "GAME OVER, PRESS ENTER TO EXIT"
 .EVEN
 .END
 
