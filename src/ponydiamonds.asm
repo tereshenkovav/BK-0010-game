@@ -28,13 +28,7 @@
         MOV	#SPRDIAMOND6,(R0)+
 
 MAIN_MENU_ENTRY:
-	; Очистка экрана 100%
-	MOV	#40000,R0
-	MOV	#20000,R1
-FILL_ZERO0:
-        MOV	#0,(R0)+
-	SOB	R1,FILL_ZERO0
-
+	JSR PC, @#CLEAR_SCREEN
 	JSR PC, @#SUB_PRINTMENU
 
 	MOV	#ARR_SPRITES,R2	
@@ -86,13 +80,7 @@ KEYMENU3:
        	JMP 	MENU_KEY_WAIT
 
 HELP_ENTRY:
-	; Очистка экрана 100%
-	MOV	#40000,R0
-	MOV	#20000,R1
-FILL_ZERO2:
-        MOV	#0,(R0)+
-	SOB	R1,FILL_ZERO2
-
+	JSR PC, @#CLEAR_SCREEN
 	JSR PC, @#SUB_PRINTHELP
 
 MENU_HELP_WAIT:
@@ -107,12 +95,12 @@ GAME_START_ENTRY:
         MOV	R5,R0 ; Начальное значение генерации
         JSR PC, @#SETRNDSEED
 
-	; Очистка экрана
+	; Очистка и заливка земли
 	MOV	#40000,R0
-	MOV	#17000,R1
-FILL_ZERO:
-        MOV	#0,(R0)+
-	SOB	R1,FILL_ZERO
+FILL_SKY:
+	CLR	(R0)+
+	CMP	R0,#76000
+        BNE	FILL_SKY
 
 	MOV	#1000,R1
 FILL_GROUND:
@@ -477,6 +465,7 @@ MS22:	NOP
 .include "proc_keytester.inc"
 .include "proc_genrnd.inc"
 .include "proc_int2str.inc"
+.include "proc_helpers.inc"
 .include "sub_prints.inc"
 .include "sub_hitbox.inc"
 .include "sprites.inc"

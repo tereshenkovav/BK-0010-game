@@ -1,0 +1,13 @@
+CLEAR_SCREEN:
+	; Очистка экрана 100%
+	MOV	R0,-(SP)
+
+	MOV	#40000,R0
+CICLE_CLEAR_SCREEN:
+	CLR	(R0)+
+	CMP	R0,#100000
+        BNE	CICLE_CLEAR_SCREEN
+
+	MOV     (SP)+,R3
+
+	RTS	PC
