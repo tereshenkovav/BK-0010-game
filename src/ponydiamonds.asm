@@ -300,7 +300,8 @@ CICLE_DIAMONDS_FRAME:
 
 	CMP	R5,#0
 	BEQ	NO_PLAY_SOUND
-        JSR PC, @#SOUND_PLAY_HIT
+	JSR PC, @#SOUND_PLAY_HIT
+
 NO_PLAY_SOUND:
 
 	ADD	R5,@#TEKSCORE
@@ -387,76 +388,30 @@ TIMERCICLEWAIT:
         BEQ	TIMERCICLEWAIT         ; Крутим, пока не дошли
 
 	JMP 	START
-        	
+
 SOUND_PLAY_HIT:
-
-        MOV	R0,-(SP)
-        MOV	R1,-(SP)
-        MOV	R2,-(SP)
-
-	MOV	#37,R0  ; count of impulse
-	MOV	#47,R1  ; len impulse      
-MS03:	MOV 	#100,@#177716 ; speaker on 
-	MOV 	R1,R2
-MS01:	NOP
-	SOB	R2,MS01
-	MOV	#0,@#177716   ; speaker off
-	MOV	R1,R2
-MS02:	NOP
-	SOB	R2,MS02
-	SOB	R0,MS03
-
-	MOV     (SP)+,R2
-	MOV     (SP)+,R1
-	MOV     (SP)+,R0
-
+	MOV	#37,-(SP)
+        MOV	#47,-(SP)
+        JSR PC, @#PLAY_SOUND_LEN_PERIOD
+        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 	RTS PC
 
 SOUND_PLAY_GAMEOVER:
 
-        MOV	R0,-(SP)
-        MOV	R1,-(SP)
-        MOV	R2,-(SP)
+	MOV	#277,-(SP)
+        MOV	#47,-(SP)
+        JSR PC, @#PLAY_SOUND_LEN_PERIOD
+        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
-	MOV	#277,R0  ; count of impulse
-	MOV	#47,R1  ; len impulse      
-MS03:	MOV 	#100,@#177716 ; speaker on 
-	MOV 	R1,R2
-MS01:	NOP
-	SOB	R2,MS01
-	MOV	#0,@#177716   ; speaker off
-	MOV	R1,R2
-MS02:	NOP
-	SOB	R2,MS02
-	SOB	R0,MS03
+	MOV	#177,-(SP)
+        MOV	#77,-(SP)
+        JSR PC, @#PLAY_SOUND_LEN_PERIOD
+        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
-	MOV	#177,R0  ; count of impulse
-	MOV	#77,R1  ; len impulse      
-MS13:	MOV 	#100,@#177716 ; speaker on 
-	MOV 	R1,R2
-MS11:	NOP
-	SOB	R2,MS11
-	MOV	#0,@#177716   ; speaker off
-	MOV	R1,R2
-MS12:	NOP
-	SOB	R2,MS12
-	SOB	R0,MS13
-
-	MOV	#77,R0  ; count of impulse
-	MOV	#147,R1  ; len impulse      
-MS23:	MOV 	#100,@#177716 ; speaker on 
-	MOV 	R1,R2
-MS21:	NOP
-	SOB	R2,MS21
-	MOV	#0,@#177716   ; speaker off
-	MOV	R1,R2
-MS22:	NOP
-	SOB	R2,MS22
-	SOB	R0,MS23
-
-	MOV     (SP)+,R2
-	MOV     (SP)+,R1
-	MOV     (SP)+,R0
+	MOV	#77,-(SP)
+        MOV	#147,-(SP)
+        JSR PC, @#PLAY_SOUND_LEN_PERIOD
+        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
 	RTS PC
 
