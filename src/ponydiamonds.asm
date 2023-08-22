@@ -199,12 +199,11 @@ NO_CLEARZONE:
 	MOV	#ARR_DIAMONDS,R0
         MOV	@#ARR_DIAMONDS_SIZE,R1
 CICLE_DIAMONDS_CLEAR:
-	MOV	(R0)+,R2
-	CMP	R2,#-1
+	CMP	(R0),#-1
 	BEQ	SKIP_ARRAY_ELEM3
 
-        MOV	(R0)+,-(SP)   ; X
-        MOV	(R0)+,R3
+        MOV	2(R0),-(SP)   ; X
+        MOV	4(R0),R3
         SUB	@#DIAMONDSPEED,R3
         MOV	R3,-(SP)  ; Y
         MOV	#10,-(SP)  ; DX 
@@ -212,9 +211,8 @@ CICLE_DIAMONDS_CLEAR:
         JSR PC, @#CLEARZONE
         ADD	#10, SP     ; Восстановить стек на 2*число аргументов
         
-        SOB 	R1,CICLE_DIAMONDS_CLEAR
 SKIP_ARRAY_ELEM3:
-        ADD	#4,R0
+        ADD	#6,R0
 	SOB 	R1,CICLE_DIAMONDS_CLEAR
 
 ; ===== блок рендера ======
@@ -237,22 +235,20 @@ DODRAWPONYSPR:
 	MOV	#ARR_DIAMONDS,R0
         MOV	@#ARR_DIAMONDS_SIZE,R1
 CICLE_DIAMONDS_RENDER:
-	MOV	(R0)+,R2
-	CMP	R2,#-1
+	CMP	(R0),#-1
 	BEQ	SKIP_ARRAY_ELEM
 
 	MOV	#ARR_SPRITES,R3
-	ADD	R2,R3
-	ADD	R2,R3
+	ADD	(R0),R3
+	ADD	(R0),R3
         MOV	(R3),-(SP)   ; Спрайт алмаза
-        MOV	(R0)+,-(SP)   ; X
-        MOV	(R0)+,-(SP)  ; Y
+        MOV	2(R0),-(SP)   ; X
+        MOV	4(R0),-(SP)  ; Y
         JSR PC, @#DRAWSPRITE
         ADD	#6, SP     ; Восстановить стек на 2*число аргументов
 
-        SOB 	R1,CICLE_DIAMONDS_RENDER
 SKIP_ARRAY_ELEM:
-        ADD	#4,R0
+        ADD	#6,R0
 	SOB 	R1,CICLE_DIAMONDS_RENDER
 
 ; ===== блок обновления состояния игры ======
@@ -270,27 +266,25 @@ NEXT_FRAME_2:
 	MOV	#ARR_DIAMONDS,R0
         MOV	@#ARR_DIAMONDS_SIZE,R1
 CICLE_DIAMONDS_FRAME:
-	MOV	(R0)+,R2
-	CMP	R2,#-1
+	CMP	(R0),#-1
 	BEQ	SKIP_ARRAY_ELEM2
 
-	MOV	(R0)+,R4 ; Запомним X в R4 для хитбокса
         ; Добавляем скорость к Y
-        ADD	@#DIAMONDSPEED,(R0)
+        ADD	@#DIAMONDSPEED,4(R0)
 
         ; Если нужно, помечаем алмаз как удаленный
-        MOV	R2,R3   ; idx
-        MOV	(R0),R5   ; Y
+        MOV	(R0),R3   ; idx
+	MOV	2(R0),R4  ; X 
+        MOV	4(R0),R5  ; Y
         JSR PC, @#SUB_HITBOX
         CMP	R4,#0
         BEQ	SKIP_REMOVE_DIAMOND
 
-        SUB	#4,R0
-	MOV	#-1,(R0)+
+	MOV	#-1,(R0)
 
 	; И затираем его
-        MOV	(R0)+,-(SP)   ; X
-        MOV	(R0),R3
+        MOV	2(R0),-(SP)   ; X
+        MOV	4(R0),R3
         SUB	@#DIAMONDSPEED,R3
         MOV	R3,-(SP)  ; Y
         MOV	#10,-(SP)  ; DX 
@@ -318,11 +312,9 @@ NO_PLAY_SOUND:
 	JSR PC, @#SUB_PRINTGAMEOVER
 
 SKIP_REMOVE_DIAMOND:	
-	ADD	#2,R0
 
-        SOB 	R1,CICLE_DIAMONDS_FRAME
 SKIP_ARRAY_ELEM2:
-        ADD	#4,R0
+        ADD	#6,R0
 	SOB 	R1,CICLE_DIAMONDS_FRAME
 
 	; Генерация новых алмазов
@@ -365,9 +357,9 @@ NO_SUB_RND2:
 
 	MOV	R2,R0 ; restore
 
-       	MOV	R3,(R0)+
-	MOV	R4,(R0)+
-	MOV	@#DIAMONDSTARTY,(R0)
+       	MOV	R3,(R0)
+	MOV	R4,2(R0)
+	MOV	@#DIAMONDSTARTY,4(R0)
 
         JMP	SKIP_NEW_DIAMOND
 SKIP_ARRAY_ELEM4:
