@@ -151,6 +151,30 @@ SUB_PRINTMENU:
 	MOV	#0,R2
 	EMT	20
 
+	MOV	#10,R1   ; позиция курсора
+	MOV	#23,R2
+	EMT	24
+
+	MOV	#MSGAUTHOR,R1     ; Вывод строки по умолчанию с нулем на конце
+	MOV	#0,R2
+	EMT	20
+
+	MOV	#4,R1   ; позиция курсора
+	MOV	#24,R2
+	EMT	24
+
+	MOV	#MSGGITHUB0,R1     ; Вывод строки по умолчанию с нулем на конце
+	MOV	#0,R2
+	EMT	20
+
+	MOV	#11,R1   ; позиция курсора
+	MOV	#25,R2
+	EMT	24
+
+	MOV	#MSGGITHUB1,R1     ; Вывод строки по умолчанию с нулем на конце
+	MOV	#0,R2
+	EMT	20
+
 	MOV     (SP)+,R2
 	MOV     (SP)+,R1
 
