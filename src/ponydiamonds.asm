@@ -272,7 +272,7 @@ CICLE_DIAMONDS_FRAME:
         ; Добавляем скорость к Y
         ADD	@#DIAMONDSPEED,4(R0)
 
-        ; Если нужно, помечаем алмаз как удаленный
+        ; Если нужно, обрабатываем алмаз как удаленный
         MOV	(R0),R3   ; idx
 	MOV	2(R0),R4  ; X 
         MOV	4(R0),R5  ; Y
@@ -280,17 +280,20 @@ CICLE_DIAMONDS_FRAME:
         CMP	R4,#0
         BEQ	SKIP_REMOVE_DIAMOND
 
-	MOV	#-1,(R0)
-
-	; И затираем его
+	; Сначала затираем его
+	MOV	#ARR_SPRITES,R3
+	ADD	(R0),R3
+	ADD	(R0),R3
+        MOV	(R3),-(SP)   ; Спрайт алмаза
         MOV	2(R0),-(SP)   ; X
         MOV	4(R0),R3
         SUB	@#DIAMONDSPEED,R3
         MOV	R3,-(SP)  ; Y
-        MOV	#10,-(SP)  ; DX 
-        MOV	#40,-(SP)  ; DY 
-        JSR PC, @#CLEARZONE
-        ADD	#10, SP     ; Восстановить стек на 2*число аргументов
+        JSR PC, @#CLEARSPRITE
+        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
+
+        ; Потом помечаем как удаленный
+	MOV	#-1,(R0)
 
 	CMP	R5,#0
 	BEQ	NO_PLAY_SOUND
@@ -423,7 +426,7 @@ PONYRENDERX:      .WORD   0
 PONYDX:     .WORD   0
 PONYDIR:    .WORD   0
 DIAMONDSPEED:    .WORD   4
-LOWBORDER:    .WORD   320
+LOWBORDER:    .WORD   360
 DIAMONDSTARTY:  .WORD   34
 DIAMONDSDROP:  .WORD   0
 DIAMONDSONAIR:  .WORD   0
