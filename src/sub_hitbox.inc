@@ -49,7 +49,7 @@ PONY_HIT_BOX:
         MOV	@#LOWBORDER,R2 ; Координата пола
         SUB	@#INT_DIAMOND_H,R2
         CMP	R1,R2
-	BNE	END_HIT_BOX
+	BLT	END_HIT_BOX
 
         MOV	#1,R4  ; Только убрать, без начисления очков
 

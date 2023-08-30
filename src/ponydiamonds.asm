@@ -131,6 +131,7 @@ CICLE_INIT:
 	MOV	#-1,(R0)+
 	MOV	#0,(R0)+
 	MOV	#0,(R0)+
+	MOV	#0,(R0)+
 	SOB 	R1,CICLE_INIT
 
 START:
@@ -204,15 +205,15 @@ CICLE_DIAMONDS_CLEAR:
 
         MOV	2(R0),-(SP)   ; X
         MOV	4(R0),R3
-        SUB	@#DIAMONDSPEED,R3
+        SUB	6(R0),R3
         MOV	R3,-(SP)  ; Y
         MOV	#10,-(SP)  ; DX 
-        MOV	@#DIAMONDSPEED,-(SP)  ; DY - размер затираемой области по движению
+        MOV	6(R0),-(SP)  ; DY - размер затираемой области по движению
         JSR PC, @#CLEARZONE
         ADD	#10, SP     ; Восстановить стек на 2*число аргументов
         
 SKIP_ARRAY_ELEM3:
-        ADD	#6,R0
+        ADD	#10,R0
 	SOB 	R1,CICLE_DIAMONDS_CLEAR
 
 ; ===== блок рендера ======
@@ -248,7 +249,7 @@ CICLE_DIAMONDS_RENDER:
         ADD	#6, SP     ; Восстановить стек на 2*число аргументов
 
 SKIP_ARRAY_ELEM:
-        ADD	#6,R0
+        ADD	#10,R0
 	SOB 	R1,CICLE_DIAMONDS_RENDER
 
 ; ===== блок обновления состояния игры ======
@@ -270,7 +271,7 @@ CICLE_DIAMONDS_FRAME:
 	BEQ	SKIP_ARRAY_ELEM2
 
         ; Добавляем скорость к Y
-        ADD	@#DIAMONDSPEED,4(R0)
+        ADD	6(R0),4(R0)
 
         ; Если нужно, обрабатываем алмаз как удаленный
         MOV	(R0),R3   ; idx
@@ -287,7 +288,7 @@ CICLE_DIAMONDS_FRAME:
         MOV	(R3),-(SP)   ; Спрайт алмаза
         MOV	2(R0),-(SP)   ; X
         MOV	4(R0),R3
-        SUB	@#DIAMONDSPEED,R3
+        SUB	6(R0),R3
         MOV	R3,-(SP)  ; Y
         JSR PC, @#CLEARSPRITE
         ADD	#6, SP     ; Восстановить стек на 2*число аргументов
@@ -317,7 +318,7 @@ NO_PLAY_SOUND:
 SKIP_REMOVE_DIAMOND:	
 
 SKIP_ARRAY_ELEM2:
-        ADD	#6,R0
+        ADD	#10,R0
 	SOB 	R1,CICLE_DIAMONDS_FRAME
 
 	; Генерация новых алмазов
@@ -358,15 +359,25 @@ NO_SUB_RND1:
 NO_SUB_RND2:
 	MOV	R0,R4
 
+        MOV	#3,R0 ; Указываем число в интервале от 0 до 3
+        JSR PC, @#GENRNDVALUE
+	CMP	R0,#3
+	BLT	NO_SUB_RND3
+	SUB	#1,R0
+NO_SUB_RND3:
+	MOV	R0,R5
+	ADD	#3,R5 ; В итоге скорость будет от 3 до 5
+
 	MOV	R2,R0 ; restore
 
        	MOV	R3,(R0)
 	MOV	R4,2(R0)
 	MOV	@#DIAMONDSTARTY,4(R0)
+	MOV	R5,6(R0)
 
         JMP	SKIP_NEW_DIAMOND
 SKIP_ARRAY_ELEM4:
-        ADD	#6,R0
+        ADD	#10,R0
 	SOB 	R1,CICLE_DIAMONDS_NEW
 
 SKIP_NEW_DIAMOND:
@@ -425,9 +436,8 @@ PONYY:      .WORD   0
 PONYRENDERX:      .WORD   0
 PONYDX:     .WORD   0
 PONYDIR:    .WORD   0
-DIAMONDSPEED:    .WORD   4
 LOWBORDER:    .WORD   360
-DIAMONDSTARTY:  .WORD   34
+DIAMONDSTARTY:  .WORD   35
 DIAMONDSDROP:  .WORD   0
 DIAMONDSONAIR:  .WORD   0
 GENINTERVAL:	.WORD  14
@@ -440,10 +450,10 @@ DEBUG:	.WORD	0
 STRBUF:    .BYTE   0,0,0,0,0,0 
 SPACEBUF:    .ASCIZ "   "
 ARR_DIAMONDS_SIZE: .WORD 32
-ARR_DIAMONDS: .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
-              .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
-              .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
-              .WORD 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0
+ARR_DIAMONDS: .WORD 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0
+              .WORD 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0
+              .WORD 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0
+              .WORD 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0
 ARR_SPRITES: .WORD 0,0,0,0, 0,0,0,0, 0,0,0,0
 ARR_SCORES:  .WORD 12,24,36, 24,50,74, 24,50,74, 50,120,170
 .include "strings-ru.inc"
