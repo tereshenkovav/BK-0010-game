@@ -130,6 +130,14 @@ SUB_PRINTMENU:
 	MOV	#0,R2
 	EMT	20
 
+	MOV	#14,R1   ; позиция курсора
+	MOV	#6,R2
+	EMT	24
+
+	MOV	#MSGVER,R1     ; Вывод строки по умолчанию с нулем на конце
+	MOV	#0,R2
+	EMT	20
+
 	MOV	#12,R1   ; позиция курсора
 	MOV	#10,R2
 	EMT	24
