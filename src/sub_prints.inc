@@ -83,9 +83,12 @@ SUB_PRINTGAMEOVER:
 	MOV	#2,R2
 	EMT	24
 
+	MOV	@#GAMEOVERCOLOR,@#214
 	MOV	#MSGGAMEOVER,R1     ; ¬ывод строки по умолчанию с нулем на конце
 	MOV	#0,R2
 	EMT	20
+
+	MOV	#125252,@#214
 
 	MOV     (SP)+,R2
 	MOV     (SP)+,R1
