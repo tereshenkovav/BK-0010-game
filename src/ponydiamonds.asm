@@ -275,26 +275,11 @@ CICLE_DIAMONDS_FRAME:
         CMP	R4,#0
         BEQ	SKIP_REMOVE_DIAMOND
 
-	; Сначала затираем его
-	MOV	#ARR_SPRITES,R3
-	ADD	(R0),R3
-	ADD	(R0),R3
-        MOV	(R3),-(SP)   ; Спрайт алмаза
-        MOV	2(R0),-(SP)   ; X
-        MOV	4(R0),R3
-        SUB	6(R0),R3
-        MOV	R3,-(SP)  ; Y
-        JSR PC, @#CLEARSPRITE
-        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
-
 	CMP	#14,(R0)
 	BEQ	IT_IS_STONE2
 	DEC	@#DIAMONDSONAIR
         JSR PC, @#SUB_PRINTDIAMONDS
 IT_IS_STONE2:
-
-        ; Потом помечаем как удаленный
-	MOV	#-1,(R0)
 
 	CMP	R5,#1 ; Не играть звук подбора алмаза, если число очков 0 или меньше
 	BLT	NO_PLAY_SOUND
@@ -307,6 +292,21 @@ NO_PLAY_SOUND:
 	MOV	#177777,@#GAMEOVERCOLOR
 	JMP	ENTER_GAMEOVER
 NO_STONE_HITTING:
+
+	; Сначала затираем его
+	MOV	#ARR_SPRITES,R3
+	ADD	(R0),R3
+	ADD	(R0),R3
+        MOV	(R3),-(SP)   ; Спрайт алмаза
+        MOV	2(R0),-(SP)   ; X
+        MOV	4(R0),R3
+        SUB	6(R0),R3
+        MOV	R3,-(SP)  ; Y
+        JSR PC, @#CLEARSPRITE
+        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
+
+        ; Потом помечаем как удаленный
+	MOV	#-1,(R0)
 
 	ADD	R5,@#TEKSCORE
 	JSR PC, @#SUB_PRINTSCORE
@@ -457,7 +457,7 @@ GENINTERVAL:	.WORD  14
 GENCOUNTER:    .WORD   0
 TEKSCORE:	.WORD	0
 GAMEOVERCOLOR  .WORD  0
-TOTALDIAMONDSINGAME .WORD 100
+TOTALDIAMONDSINGAME .WORD 10
 DEBUG:	.WORD	0
 STRBUF:    .BYTE   0,0,0,0,0,0 
 SPACEBUF:    .ASCIZ "   "
