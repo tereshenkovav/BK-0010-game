@@ -26,6 +26,7 @@
         MOV	#SPRDIAMOND2,(R0)+
         MOV	#SPRDIAMOND4,(R0)+
         MOV	#SPRDIAMOND6,(R0)+
+        MOV	#SPRSTONE,(R0)+
 
 MAIN_MENU_ENTRY:
 	JSR PC, @#CLEAR_SCREEN
@@ -116,7 +117,6 @@ FILL_GROUND:
 	MOV	#0,@#TEKSCORE
 	MOV	@#TOTALDIAMONDSINGAME,@#DIAMONDSDROP
 	MOV	#0,@#DIAMONDSONAIR
-	MOV	#0,@#GAMEOVER
 
 	MOV	@#GENINTERVAL,@#GENCOUNTER
 
@@ -162,12 +162,6 @@ KEYSTEP2:
 	BNE     KEYSTEP3
        	MOV	#0,@#PONYDX ; Смена скорости
 KEYSTEP3:
-	CMP	R0,#12      ; клавиша "ввод"?
-	BNE     KEYSTEP4
-	CMP	#1,@#GAMEOVER
-	BNE	KEYSTEP4
-       	JMP	MAIN_MENU_ENTRY
-KEYSTEP4:
 
 END_KEY:        
 
@@ -293,19 +287,30 @@ CICLE_DIAMONDS_FRAME:
         JSR PC, @#CLEARSPRITE
         ADD	#6, SP     ; Восстановить стек на 2*число аргументов
 
+	CMP	#14,(R0)
+	BEQ	IT_IS_STONE2
+	DEC	@#DIAMONDSONAIR
+        JSR PC, @#SUB_PRINTDIAMONDS
+IT_IS_STONE2:
+
         ; Потом помечаем как удаленный
 	MOV	#-1,(R0)
 
-	CMP	R5,#0
-	BEQ	NO_PLAY_SOUND
+	CMP	R5,#1 ; Не играть звук подбора алмаза, если число очков 0 или меньше
+	BLT	NO_PLAY_SOUND
 	JSR PC, @#SOUND_PLAY_HIT
 
 NO_PLAY_SOUND:
 
+	CMP	R5,#-1
+	BNE	NO_STONE_HITTING
+	MOV	#1,@#ONCEPLAY
+	JSR PC, @#SUB_PRINTGAMEOVER
+        JMP	SKIP_NEW_DIAMOND
+NO_STONE_HITTING:
+
 	ADD	R5,@#TEKSCORE
-	DEC	@#DIAMONDSONAIR
 	JSR PC, @#SUB_PRINTSCORE
-        JSR PC, @#SUB_PRINTDIAMONDS
 
         MOV	@#DIAMONDSONAIR,R3
         ADD	@#DIAMONDSDROP,R3
@@ -319,7 +324,9 @@ SKIP_REMOVE_DIAMOND:
 
 SKIP_ARRAY_ELEM2:
         ADD	#10,R0
-	SOB 	R1,CICLE_DIAMONDS_FRAME
+	DEC	R1
+	CMP	R1,#0
+	BNE	CICLE_DIAMONDS_FRAME
 
 	; Генерация новых алмазов
 	CMP	@#DIAMONDSDROP,#0
@@ -330,10 +337,6 @@ SKIP_ARRAY_ELEM2:
 	BNE	SKIP_NEW_DIAMOND
 	
 	MOV	@#GENINTERVAL,@#GENCOUNTER
-	DEC	@#DIAMONDSDROP
-	INC	@#DIAMONDSONAIR
-
-        JSR PC, @#SUB_PRINTDIAMONDS
 	
 	MOV	#ARR_DIAMONDS,R0
         MOV	@#ARR_DIAMONDS_SIZE,R1
@@ -345,9 +348,9 @@ CICLE_DIAMONDS_NEW:
 
         MOV	#17,R0 ; Указываем число в интервале от 0 до 15
         JSR PC, @#GENRNDVALUE
-	CMP	R0,#13
+	CMP	R0,#15
 	BLT	NO_SUB_RND1
-	SUB	#4,R0
+	MOV	#14,R0
 NO_SUB_RND1:
 	MOV	R0,R3
 
@@ -370,6 +373,13 @@ NO_SUB_RND3:
 
 	MOV	R2,R0 ; restore
 
+	CMP	R3,#14 ; Если выпал камень, то не нужно делать счет алмазам
+	BEQ     IT_IS_STONE
+	DEC	@#DIAMONDSDROP
+	INC	@#DIAMONDSONAIR
+        JSR PC, @#SUB_PRINTDIAMONDS
+IT_IS_STONE:
+
        	MOV	R3,(R0)
 	MOV	R4,2(R0)
 	MOV	@#DIAMONDSTARTY,4(R0)
@@ -385,8 +395,8 @@ SKIP_NEW_DIAMOND:
 	CMP 	@#ONCEPLAY,#0
 	BEQ	TIMERCICLEWAIT
 	MOV     #0,@#ONCEPLAY
-	MOV     #1,@#GAMEOVER
 	JSR PC, @#SOUND_PLAY_GAMEOVER
+	JMP	WAIT_ENTER_AT_GAMEOVER
 	
 ; ===== блок формирования длины фрейма ======
 TIMERCICLEWAIT:
@@ -421,6 +431,15 @@ SOUND_PLAY_GAMEOVER:
 
 	RTS PC
 
+WAIT_ENTER_AT_GAMEOVER:
+        JSR PC, @#KEY_TESTER
+
+	CMP	R1,#1       ;не было нажатий и нет удержания
+        BNE     WAIT_ENTER_AT_GAMEOVER
+
+	CMP	R0,#12      ; клавиша "ввод"?
+	BNE     WAIT_ENTER_AT_GAMEOVER
+       	JMP	MAIN_MENU_ENTRY
         
 .include "proc_drawsprite.inc"
 .include "proc_keytester.inc"
@@ -443,7 +462,6 @@ DIAMONDSONAIR:  .WORD   0
 GENINTERVAL:	.WORD  14
 GENCOUNTER:    .WORD   0
 TEKSCORE:	.WORD	0
-GAMEOVER:	.WORD	0
 ONCEPLAY:	.WORD   0
 TOTALDIAMONDSINGAME .WORD 100
 DEBUG:	.WORD	0
@@ -454,8 +472,8 @@ ARR_DIAMONDS: .WORD 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,
               .WORD 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0
               .WORD 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0
               .WORD 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0
-ARR_SPRITES: .WORD 0,0,0,0, 0,0,0,0, 0,0,0,0
-ARR_SCORES:  .WORD 12,24,36, 24,50,74, 24,50,74, 50,120,170
+ARR_SPRITES: .WORD 0,0,0,0, 0,0,0,0, 0,0,0,0, 0
+ARR_SCORES:  .WORD 12,24,36, 24,50,74, 24,50,74, 50,120,170, -1
 .include "strings-ru.inc"
 .EVEN
 .END
