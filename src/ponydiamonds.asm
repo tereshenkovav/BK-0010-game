@@ -428,8 +428,8 @@ ENTER_GAMEOVER:
 WAIT_ENTER_AT_GAMEOVER:	
         JSR PC, @#KEY_TESTER
 
-	CMP	R1,#1       ;не было нажатий и нет удержания
-        BNE     WAIT_ENTER_AT_GAMEOVER
+	CMP	R1,#0       ;не было нажатий и нет удержания
+        BEQ	WAIT_ENTER_AT_GAMEOVER
 
 	CMP	R0,#12      ; клавиша "ввод"?
 	BNE     WAIT_ENTER_AT_GAMEOVER
