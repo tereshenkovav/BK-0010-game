@@ -50,7 +50,7 @@ SUB_PRINTDIAMONDS:
         MOV	R1,-(SP)
         MOV	R2,-(SP)
 
-	MOV	#25,R1   ; позиция курсора
+	MOV	#26,R1   ; позиция курсора
 	MOV	#0,R2
 	EMT	24
 
