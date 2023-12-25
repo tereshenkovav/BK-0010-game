@@ -44,3 +44,45 @@ SOUND_CICLE2:
 	MOV     (SP)+,R0
 
         RTS PC
+
+; ѕроцедура принимает в стеке адрес строки и координату Y дл€ вывода по центру
+PRINT_STRING_CENTERED:
+        ; —охранение регистров
+        MOV	R0,-(SP)
+        MOV	R1,-(SP)
+        MOV	R2,-(SP)
+        MOV	R3,-(SP)
+
+        ; »звлечение аргументов
+        ADD	#12,SP
+        MOV     (SP)+,R2
+        MOV     (SP),R3
+        SUB	#14,SP
+
+	MOV	R3,R0   ; ¬ычисл€ем длину строки через разницу начала и конца
+LAB_CALC_LEN:
+	CMPB	(R0),#0
+	BEQ	LAB_CALC_LEN_FIN
+	INC     R0
+	JMP	LAB_CALC_LEN
+LAB_CALC_LEN_FIN:
+
+	SUB	R3,R0  ; ѕолучаем длину, делим на 2 и вычитаем из 16
+	ASR	R0
+	MOV	#20,R1
+	SUB	R0,R1  ; так получаем позицию курсора по X
+	EMT	24 ; R2 - Y уже получен из стека
+
+	; ¬ывод строки по умолчанию с нулем на конце
+	MOV	R3,R1
+	MOV	#0,R2
+	EMT	20
+
+        ; ¬осстановление регистров
+	MOV     (SP)+,R3
+	MOV     (SP)+,R2
+	MOV     (SP)+,R1
+	MOV     (SP)+,R0
+
+        RTS PC
+

@@ -122,69 +122,45 @@ SUB_PRINTMENU:
         MOV	R1,-(SP)
         MOV	R2,-(SP)
 
-	MOV	#4,R1   ; позиция курсора
-	MOV	#5,R2
-	EMT	24
+        MOV	#MSGTITLE,-(SP)   ; Строка
+        MOV	#5,-(SP)   ; Y
+        JSR PC, @#PRINT_STRING_CENTERED
+        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
-	MOV	#MSGTITLE,R1     ; Вывод строки по умолчанию с нулем на конце
-	MOV	#0,R2
-	EMT	20
+        MOV	#MSGVER,-(SP)   ; Строка
+        MOV	#6,-(SP)   ; Y
+        JSR PC, @#PRINT_STRING_CENTERED
+        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
-	MOV	#14,R1   ; позиция курсора
-	MOV	#6,R2
-	EMT	24
+        MOV	#MSGMENUSTART,-(SP)   ; Строка
+        MOV	#10,-(SP)   ; Y
+        JSR PC, @#PRINT_STRING_CENTERED
+        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
-	MOV	#MSGVER,R1     ; Вывод строки по умолчанию с нулем на конце
-	MOV	#0,R2
-	EMT	20
+        MOV	#MSGMENUHELP,-(SP)   ; Строка
+        MOV	#11,-(SP)   ; Y
+        JSR PC, @#PRINT_STRING_CENTERED
+        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
-	MOV	#12,R1   ; позиция курсора
-	MOV	#10,R2
-	EMT	24
+        MOV	#MSGMENUEXIT,-(SP)   ; Строка
+        MOV	#12,-(SP)   ; Y
+        JSR PC, @#PRINT_STRING_CENTERED
+        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
-	MOV	#MSGMENUSTART,R1     ; Вывод строки по умолчанию с нулем на конце
-	MOV	#0,R2
-	EMT	20
+        MOV	#MSGAUTHOR,-(SP)   ; Строка
+        MOV	#23,-(SP)   ; Y
+        JSR PC, @#PRINT_STRING_CENTERED
+        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
-	MOV	#12,R1   ; позиция курсора
-	MOV	#11,R2
-	EMT	24
+        MOV	#MSGGITHUB0,-(SP)   ; Строка
+        MOV	#24,-(SP)   ; Y
+        JSR PC, @#PRINT_STRING_CENTERED
+        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
-	MOV	#MSGMENUHELP,R1     ; Вывод строки по умолчанию с нулем на конце
-	MOV	#0,R2
-	EMT	20
-
-	MOV	#12,R1   ; позиция курсора
-	MOV	#12,R2
-	EMT	24
-
-	MOV	#MSGMENUEXIT,R1     ; Вывод строки по умолчанию с нулем на конце
-	MOV	#0,R2
-	EMT	20
-
-	MOV	#10,R1   ; позиция курсора
-	MOV	#23,R2
-	EMT	24
-
-	MOV	#MSGAUTHOR,R1     ; Вывод строки по умолчанию с нулем на конце
-	MOV	#0,R2
-	EMT	20
-
-	MOV	#4,R1   ; позиция курсора
-	MOV	#24,R2
-	EMT	24
-
-	MOV	#MSGGITHUB0,R1     ; Вывод строки по умолчанию с нулем на конце
-	MOV	#0,R2
-	EMT	20
-
-	MOV	#11,R1   ; позиция курсора
-	MOV	#25,R2
-	EMT	24
-
-	MOV	#MSGGITHUB1,R1     ; Вывод строки по умолчанию с нулем на конце
-	MOV	#0,R2
-	EMT	20
+        MOV	#MSGGITHUB1,-(SP)   ; Строка
+        MOV	#25,-(SP)   ; Y
+        JSR PC, @#PRINT_STRING_CENTERED
+        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
 	MOV     (SP)+,R2
 	MOV     (SP)+,R1
