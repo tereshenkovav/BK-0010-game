@@ -115,3 +115,21 @@ PRINT_STRING_BY_COLOR_AND_POS:
 	MOV     (SP)+,R1
 
         RTS PC
+
+; Процедура принимает в R0 адрес сцены для рендера
+PRINT_SCENE:
+
+NEXT_TEXT_LINE:
+        JSR PC, @#PRINT_STRING_BY_COLOR_AND_POS
+
+        DEC	R0 ; Позволяет обработать случай пустой строки
+LAB_CALC_LEN1:
+        INC	R0
+	CMPB	(R0),#0
+	BNE	LAB_CALC_LEN1
+
+	INC	R0
+	CMP	(R0),#0
+	BNE	NEXT_TEXT_LINE
+
+        RTS PC
