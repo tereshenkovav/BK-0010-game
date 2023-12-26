@@ -86,3 +86,32 @@ LAB_CALC_LEN_FIN:
 
         RTS PC
 
+; Процедура принимает в R0 адрес строки содержащей цвет, позицию и текст
+PRINT_STRING_BY_COLOR_AND_POS:
+        ; Сохранение регистров
+        MOV	R1,-(SP)
+        MOV	R2,-(SP)
+
+        MOVB	(R0),R1
+        SWAB	R1
+	MOVB	(R0),R2
+        ADD	R2,R1
+	MOV	#0,@#212   ;черный фон
+	MOV	R1,@#214   ; цвет шрифта
+
+	INC	R0
+	MOVB	(R0),R1   ; позиция курсора
+	INC	R0
+	MOVB	(R0),R2
+	EMT	24
+
+	INC	R0
+	MOV	R0,R1     ; Вывод строки по умолчанию с нулем на конце
+	MOV	#0,R2
+	EMT	20
+
+        ; Восстановление регистров
+	MOV     (SP)+,R2
+	MOV     (SP)+,R1
+
+        RTS PC
