@@ -132,18 +132,23 @@ SUB_PRINTMENU:
         JSR PC, @#PRINT_STRING_CENTERED
         ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
-        MOV	#MSGMENUSTART,-(SP)   ; Строка
+        MOV	#MSGMENUSTARTEASY,-(SP)   ; Строка
         MOV	#10,-(SP)   ; Y
         JSR PC, @#PRINT_STRING_CENTERED
         ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
-        MOV	#MSGMENUHELP,-(SP)   ; Строка
+        MOV	#MSGMENUSTARTHARD,-(SP)   ; Строка
         MOV	#11,-(SP)   ; Y
         JSR PC, @#PRINT_STRING_CENTERED
         ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
-        MOV	#MSGMENUEXIT,-(SP)   ; Строка
+        MOV	#MSGMENUHELP,-(SP)   ; Строка
         MOV	#12,-(SP)   ; Y
+        JSR PC, @#PRINT_STRING_CENTERED
+        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
+
+        MOV	#MSGMENUEXIT,-(SP)   ; Строка
+        MOV	#13,-(SP)   ; Y
         JSR PC, @#PRINT_STRING_CENTERED
         ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 

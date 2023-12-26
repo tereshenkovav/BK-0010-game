@@ -68,16 +68,22 @@ MENU_KEY_WAIT:
         ; »наче парсим
 	CMP	R0,#61      ; клавиша "1"
 	BNE     KEYMENU1
+	MOV	#14,@#DIFFGENTYPE
         JMP 	GAME_START_ENTRY
 KEYMENU1:
 	CMP	R0,#62      ; клавиша "2"
 	BNE     KEYMENU2
-        JMP 	HELP_ENTRY
+	MOV	#15,@#DIFFGENTYPE
+        JMP 	GAME_START_ENTRY
 KEYMENU2:
-	CMP	R0,#60      ; клавиша "0"
+	CMP	R0,#63      ; клавиша "3"
 	BNE     KEYMENU3
-	HALT
+        JMP 	HELP_ENTRY
 KEYMENU3:
+	CMP	R0,#60      ; клавиша "0"
+	BNE     KEYMENU4
+	HALT
+KEYMENU4:
        	JMP 	MENU_KEY_WAIT
 
 HELP_ENTRY:
@@ -345,9 +351,10 @@ CICLE_DIAMONDS_NEW:
 
         MOV	#17,R0 ; ”казываем число в интервале от 0 до 15
         JSR PC, @#GENRNDVALUE
-	CMP	R0,#15
+	CMP	R0,@#DIFFGENTYPE
 	BLT	NO_SUB_RND1
-	MOV	#14,R0
+	MOV	@#DIFFGENTYPE,R0
+	DEC	R0
 NO_SUB_RND1:
 	MOV	R0,R3
 
@@ -445,6 +452,7 @@ WAIT_ENTER_AT_GAMEOVER:
 .include "sub_hitbox.inc"
 .include "sprites.inc"
 
+DIFFGENTYPE:      .WORD   0
 PONYX:      .WORD   0
 PONYY:      .WORD   0
 PONYRENDERX:      .WORD   0
