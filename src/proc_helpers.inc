@@ -60,12 +60,11 @@ PRINT_STRING_CENTERED:
         SUB	#14,SP
 
 	MOV	R3,R0   ; ¬ычисл€ем длину строки через разницу начала и конца
+	DEC	R0  ; ѕозвол€ет обработать случай пустой строки
 LAB_CALC_LEN:
+	INC	R0
 	CMPB	(R0),#0
-	BEQ	LAB_CALC_LEN_FIN
-	INC     R0
-	JMP	LAB_CALC_LEN
-LAB_CALC_LEN_FIN:
+	BNE	LAB_CALC_LEN
 
 	SUB	R3,R0  ; ѕолучаем длину, делим на 2 и вычитаем из 16
 	ASR	R0
