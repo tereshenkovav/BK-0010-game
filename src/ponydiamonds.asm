@@ -62,8 +62,8 @@ MENU_KEY_WAIT:
         INC	R5
         JSR PC, @#KEY_TESTER
 
-	CMP	R1,#0       ;не было нажатий и нет удержания
-        BEQ     MENU_KEY_WAIT
+	CMP	R1,#1       ;не было нажатий и нет удержания
+        BNE     MENU_KEY_WAIT
 
         ; Иначе парсим
 	CMP	R0,#61      ; клавиша "1"
@@ -78,12 +78,20 @@ KEYMENU1:
 KEYMENU2:
 	CMP	R0,#63      ; клавиша "3"
 	BNE     KEYMENU3
-        JMP 	HELP_ENTRY
+	MOV	#1,R2
+	SUB	@#SOUNDON,R2
+	MOV	R2,@#SOUNDON
+	JSR PC, @#SUB_PRINTSOUND
+        JMP 	MENU_KEY_WAIT
 KEYMENU3:
-	CMP	R0,#60      ; клавиша "0"
+	CMP	R0,#64      ; клавиша "4"
 	BNE     KEYMENU4
-	HALT
+        JMP 	HELP_ENTRY
 KEYMENU4:
+	CMP	R0,#60      ; клавиша "0"
+	BNE     KEYMENU5
+	HALT
+KEYMENU5:
        	JMP 	MENU_KEY_WAIT
 
 HELP_ENTRY:
@@ -403,14 +411,35 @@ TIMERCICLEWAIT:
 
 	JMP 	START
 
+ENTER_GAMEOVER:
+        JSR PC, @#SUB_PRINTGAMEOVER
+	JSR PC, @#SOUND_PLAY_GAMEOVER
+
+WAIT_ENTER_AT_GAMEOVER:	
+        JSR PC, @#KEY_TESTER
+
+	CMP	R1,#0       ;не было нажатий и нет удержания
+        BEQ	WAIT_ENTER_AT_GAMEOVER
+
+	CMP	R0,#12      ; клавиша "ввод"?
+	BNE     WAIT_ENTER_AT_GAMEOVER
+       	JMP	MAIN_MENU_ENTRY
+
 SOUND_PLAY_HIT:
+	CMP	@#SOUNDON,#0
+	BEQ	SKIP_SOUND_PLAY_HIT
+
 	MOV	#37,-(SP)
         MOV	#47,-(SP)
         JSR PC, @#PLAY_SOUND_LEN_PERIOD
         ADD	#4, SP     ; Восстановить стек на 2*число аргументов
+
+SKIP_SOUND_PLAY_HIT:
 	RTS PC
 
 SOUND_PLAY_GAMEOVER:
+	CMP	@#SOUNDON,#0
+	BEQ	SKIP_SOUND_PLAY_GAMEOVER
 
 	MOV	#277,-(SP)
         MOV	#47,-(SP)
@@ -427,21 +456,8 @@ SOUND_PLAY_GAMEOVER:
         JSR PC, @#PLAY_SOUND_LEN_PERIOD
         ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
+SKIP_SOUND_PLAY_GAMEOVER:
 	RTS PC
-
-ENTER_GAMEOVER:
-        JSR PC, @#SUB_PRINTGAMEOVER
-	JSR PC, @#SOUND_PLAY_GAMEOVER
-
-WAIT_ENTER_AT_GAMEOVER:	
-        JSR PC, @#KEY_TESTER
-
-	CMP	R1,#0       ;не было нажатий и нет удержания
-        BEQ	WAIT_ENTER_AT_GAMEOVER
-
-	CMP	R0,#12      ; клавиша "ввод"?
-	BNE     WAIT_ENTER_AT_GAMEOVER
-       	JMP	MAIN_MENU_ENTRY
         
 .include "proc_drawsprite.inc"
 .include "proc_keytester.inc"
@@ -453,6 +469,7 @@ WAIT_ENTER_AT_GAMEOVER:
 .include "sprites.inc"
 
 DIFFGENTYPE:      .WORD   0
+SOUNDON:	.WORD   1
 PONYX:      .WORD   0
 PONYY:      .WORD   0
 PONYRENDERX:      .WORD   0

@@ -142,13 +142,20 @@ SUB_PRINTMENU:
         JSR PC, @#PRINT_STRING_CENTERED
         ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
-        MOV	#MSGMENUHELP,-(SP)   ; Строка
+        MOV	#MSGMENUSOUND,-(SP)   ; Строка
         MOV	#12,-(SP)   ; Y
         JSR PC, @#PRINT_STRING_CENTERED
         ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
-        MOV	#MSGMENUEXIT,-(SP)   ; Строка
+        JSR PC, @#SUB_PRINTSOUND
+
+        MOV	#MSGMENUHELP,-(SP)   ; Строка
         MOV	#13,-(SP)   ; Y
+        JSR PC, @#PRINT_STRING_CENTERED
+        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
+
+        MOV	#MSGMENUEXIT,-(SP)   ; Строка
+        MOV	#14,-(SP)   ; Y
         JSR PC, @#PRINT_STRING_CENTERED
         ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
@@ -171,3 +178,16 @@ SUB_PRINTMENU:
 	MOV     (SP)+,R1
 
         RTS PC
+
+SUB_PRINTSOUND:
+
+	CMP	@#SOUNDON,#0
+	BEQ	LAB_NOSOUND
+	MOV	#TEXTON, R0
+	JMP	LAB_DO_PRINTSOUND
+LAB_NOSOUND:
+	MOV	#TEXTOFF, R0
+LAB_DO_PRINTSOUND:
+        JSR PC, @#PRINT_STRING_BY_COLOR_AND_POS
+
+	RTS PC
