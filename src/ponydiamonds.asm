@@ -90,6 +90,7 @@ KEYMENU3:
 KEYMENU4:
 	CMP	R0,#60      ; клавиша "0"
 	BNE     KEYMENU5
+	EMT	14
 	HALT
 KEYMENU5:
        	JMP 	MENU_KEY_WAIT
