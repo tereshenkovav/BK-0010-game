@@ -11,6 +11,8 @@
 
 	; Запрещаем прерывания от клавиатуры, чтобы не мешало игре
 	BIS	#100,@#177660 
+	; Ставим на СТОП полный выход
+	MOV	#EXIT_BY_STOP,@#4
 
         ; Инициализация массива ссылок на спрайты
         MOV	#ARR_SPRITES,R0
@@ -178,7 +180,9 @@ KEYSTEP2:
 	BNE     KEYSTEP3
        	MOV	#0,@#PONYDX ; Смена скорости
 KEYSTEP3:
-
+	CMP	R0,#3      ; клавиша "КТ"?
+	BNE     END_KEY
+	JMP	MAIN_MENU_ENTRY
 END_KEY:        
 
 ; ===== блок чистки старой сцены ======
@@ -459,7 +463,11 @@ SOUND_PLAY_GAMEOVER:
 
 SKIP_SOUND_PLAY_GAMEOVER:
 	RTS PC
-        
+
+EXIT_BY_STOP:
+	EMT	14
+	HALT
+
 .include "proc_drawsprite.inc"
 .include "proc_keytester.inc"
 .include "proc_genrnd.inc"
