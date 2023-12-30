@@ -376,14 +376,12 @@ NO_SUB_RND1:
 NO_SUB_RND2:
 	MOV	R0,R4
 
-        MOV	#3,R0 ; ”казываем число в интервале от 0 до 3
-        JSR PC, @#GENRNDVALUE
-	CMP	R0,#3
-	BLT	NO_SUB_RND3
-	SUB	#1,R0
-NO_SUB_RND3:
-	MOV	R0,R5
-	ADD	#3,R5 ; ¬ итоге скорость будет от 3 до 5
+	MOV	#5,R5 ; ѕо умолчанию скорость максимум
+	JSR PC,	@#SUB_IS_X_OVER_DIAMONDS
+	CMP	R0,#0
+	BEQ	NO_FIX_NEWVELOCITY ; ѕроверили пересечение и если оно есть
+	MOV	#3,R5  ; то нужно уменьшить скорость
+NO_FIX_NEWVELOCITY:
 
 	MOV	R2,R0 ; restore
 
@@ -402,7 +400,7 @@ IT_IS_STONE:
         JMP	SKIP_NEW_DIAMOND
 SKIP_ARRAY_ELEM4:
         ADD	#10,R0
-	SOB 	R1,CICLE_DIAMONDS_NEW
+	SOB	R1,CICLE_DIAMONDS_NEW
 
 SKIP_NEW_DIAMOND:
 	

@@ -61,5 +61,52 @@ END_HIT_BOX:
 
         RTS PC
 
+; В R4 - получаем координату нового алмаза
+; В R0 вернет #1, если есть пересечение с существующими в массиве
+SUB_IS_X_OVER_DIAMONDS:
+        MOV	R1,-(SP)
+        MOV	R2,-(SP)
+        MOV	R3,-(SP)
+        MOV	R5,-(SP)
+
+	MOV	#0, R5
+
+	MOV	#ARR_DIAMONDS,R0
+        MOV	@#ARR_DIAMONDS_SIZE,R1
+CICLE_DIAMONDS_OVER:
+	CMP	(R0),#-1
+	BEQ	SKIP_ARRAY_DIAMONDS_OVER
+
+        MOV	2(R0),R3   ; X
+        ; Вычисляем модуль расстояния между алмазом в массиве и R4
+	CMP	R3,R4
+	BLT	MODULE_1
+
+	MOV	R3,R2
+	SUB	R4,R2
+	JMP	MODULE_2
+MODULE_1:
+	MOV	R4,R2
+	SUB	R3,R2
+MODULE_2:
+
+        CMP	#40,R2 ; Если меньше 32, то делаем отметку в R5
+	BLT	SKIP_ARRAY_DIAMONDS_OVER
+
+	MOV	#1,R5
+
+SKIP_ARRAY_DIAMONDS_OVER:
+        ADD	#10,R0
+	SOB 	R1,CICLE_DIAMONDS_OVER
+
+	MOV	R5,R0  ; Выводим отметку из R5 в R0
+
+	MOV     (SP)+,R5
+	MOV     (SP)+,R3
+	MOV     (SP)+,R2
+	MOV     (SP)+,R1
+
+	RTS PC
+
 INT_DIAMOND_W:	.WORD	0
 INT_DIAMOND_H:	.WORD	0
