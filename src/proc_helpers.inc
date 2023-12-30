@@ -8,7 +8,7 @@ CICLE_CLEAR_SCREEN:
 	CMP	R0,#100000
         BNE	CICLE_CLEAR_SCREEN
 
-	MOV     (SP)+,R3
+	MOV     (SP)+,R0
 
 	RTS	PC
 
