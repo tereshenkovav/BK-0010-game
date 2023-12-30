@@ -62,10 +62,10 @@ MAIN_MENU_ENTRY:
 	MOV	#0,R5  ; Накопление случайного значения
 MENU_KEY_WAIT:
         INC	R5
-        JSR PC, @#KEY_TESTER
+        JSR PC, @#IS_KEY_PRESSED
 
-	CMP	R1,#1       ;не было нажатий и нет удержания
-        BNE     MENU_KEY_WAIT
+	CMP	R0,#0       ;не было нажатий
+        BEQ     MENU_KEY_WAIT
 
         ; Иначе парсим
 	CMP	R0,#61      ; клавиша "1"
@@ -103,9 +103,9 @@ HELP_ENTRY:
 	JSR PC, @#PRINT_SCENE
 
 MENU_HELP_WAIT:
-        JSR PC, @#KEY_TESTER
+        JSR PC, @#IS_KEY_PRESSED
 
-	CMP	R1,#0       ;не было нажатий и нет удержания
+	CMP	R0,#0       ;не было нажатий 
         BEQ     MENU_HELP_WAIT
 
         JMP MAIN_MENU_ENTRY
@@ -157,12 +157,9 @@ START:
         MOV	#24,@#177712  ; Разрешаем счет и индикацию
 
 ; ===== блок опроса клавиатуры ======
-        JSR PC, @#KEY_TESTER
+        JSR PC, @#IS_KEY_PRESSED
 
-	CMP	R1,#0       ;не было нажатий и нет удержания
-        BEQ     END_KEY
-
-        CMP	R1,#2       ; если режим удержания (2), пропускаем
+	CMP	R0,#0       ;не было нажатий 
         BEQ     END_KEY
 
         ; Иначе режим нажатия (1) и мы его парсим
@@ -421,10 +418,7 @@ ENTER_GAMEOVER:
 	JSR PC, @#SOUND_PLAY_GAMEOVER
 
 WAIT_ENTER_AT_GAMEOVER:	
-        JSR PC, @#KEY_TESTER
-
-	CMP	R1,#0       ;не было нажатий и нет удержания
-        BEQ	WAIT_ENTER_AT_GAMEOVER
+        JSR PC, @#IS_KEY_PRESSED
 
 	CMP	R0,#12      ; клавиша "ввод"?
 	BNE     WAIT_ENTER_AT_GAMEOVER
