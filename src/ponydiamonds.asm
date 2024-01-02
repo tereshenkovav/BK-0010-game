@@ -14,22 +14,6 @@
 	; Ставим на СТОП полный выход
 	MOV	#EXIT_BY_STOP,@#4
 
-        ; Инициализация массива ссылок на спрайты
-        MOV	#ARR_SPRITES,R0
-        MOV	#SPRDIAMOND7,(R0)+
-        MOV	#SPRDIAMOND9,(R0)+
-        MOV	#SPRDIAMOND11,(R0)+
-        MOV	#SPRDIAMOND8,(R0)+
-        MOV	#SPRDIAMOND10,(R0)+
-        MOV	#SPRDIAMOND12,(R0)+
-        MOV	#SPRDIAMOND1,(R0)+
-        MOV	#SPRDIAMOND3,(R0)+
-        MOV	#SPRDIAMOND5,(R0)+
-        MOV	#SPRDIAMOND2,(R0)+
-        MOV	#SPRDIAMOND4,(R0)+
-        MOV	#SPRDIAMOND6,(R0)+
-        MOV	#SPRSTONE,(R0)+
-
 MAIN_MENU_ENTRY:
 	JSR PC, @#CLEAR_SCREEN
 	JSR PC, @#SUB_PRINTMENU
@@ -493,7 +477,11 @@ ARR_DIAMONDS: .WORD 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,
               .WORD 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0
               .WORD 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0
               .WORD 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0
-ARR_SPRITES: .WORD 0,0,0,0, 0,0,0,0, 0,0,0,0, 0
+ARR_SPRITES:
+  .WORD SPRDIAMOND7, SPRDIAMOND9, SPRDIAMOND11,SPRDIAMOND8
+  .WORD SPRDIAMOND10,SPRDIAMOND12,SPRDIAMOND1, SPRDIAMOND3
+  .WORD SPRDIAMOND5, SPRDIAMOND2, SPRDIAMOND4, SPRDIAMOND6
+  .WORD SPRSTONE
 ARR_SCORES:  .WORD 12,24,36, 24,50,74, 24,50,74, 50,120,170, -1
 .include "strings.inc"
 .EVEN
