@@ -91,14 +91,6 @@ PRINT_STRING_BY_COLOR_AND_POS:
         MOV	R1,-(SP)
         MOV	R2,-(SP)
 
-        MOVB	(R0),R1
-        SWAB	R1
-	MOVB	(R0),R2
-        ADD	R2,R1
-	MOV	#0,@#212   ;черный фон
-	MOV	R1,@#214   ; цвет шрифта
-
-	INC	R0
 	MOVB	(R0),R1   ; позиция курсора
 	INC	R0
 	MOVB	(R0),R2
