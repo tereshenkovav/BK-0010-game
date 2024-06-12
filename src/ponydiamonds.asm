@@ -14,6 +14,19 @@
 	; Ставим на СТОП полный выход
 	MOV	#EXIT_BY_STOP,@#4
 
+	JSR PC, @#SHOW_INTRO
+
+        MOV	#0,R5
+MENU_KEY_WAIT_INTRO:
+        JSR PC, @#IS_KEY_PRESSED
+
+        INC	R5
+	CMP	R5,#120000
+	BEQ	MAIN_MENU_ENTRY
+
+	CMP	R0,#0       ;не было нажатий
+        BEQ     MENU_KEY_WAIT_INTRO
+
 MAIN_MENU_ENTRY:
 	JSR PC, @#CLEAR_SCREEN
 	JSR PC, @#SUB_PRINTMENU
@@ -451,7 +464,9 @@ EXIT_BY_STOP:
 .include "proc_helpers.inc"
 .include "sub_prints.inc"
 .include "sub_hitbox.inc"
+.include "sub_intro.inc"
 .include "sprites.inc"
+.include "intro.inc"
 
 DIFFGENTYPE:      .WORD   0
 SOUNDON:	.WORD   1
