@@ -1,0 +1,21 @@
+SetCompressor LZMA
+SetCompressionLevel 9
+ZipFile PonyDiamonds-$LANGH$-%VERSION%-BKEmulator-$WINARC$.zip
+
+File files\bk.ini
+Dir files\scripts
+File %BKEMUDIR%\BK$x64$.exe
+Text "BK$x64$.exe /b ponydiamonds.bin" run_game.bat
+
+SetOutPath bin
+File ..\..\src\ponydiamonds_$LANGL$.bin ponydiamonds.bin
+
+SetOutPath dll
+File %BKEMUDIR%\dll\BKOscScrOGL$x64$.dll
+File %BKEMUDIR%\dll\BKScreenOGL$x64$.dll
+
+SetOutPath rom
+File %BKEMUDIR%\rom\bk10_017_mon.rom
+File %BKEMUDIR%\rom\bk10_106_basic1.rom
+File %BKEMUDIR%\rom\bk10_107_basic2.rom
+File %BKEMUDIR%\rom\bk10_108_basic3.rom
