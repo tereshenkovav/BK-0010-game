@@ -1,5 +1,10 @@
-Игра для БК-0010-01 на базе ассемблера PDP-11.\
-BK-0010-01 video game on PDP-11 assembler.
+# Игра для БК-0010-01 на базе ассемблера PDP-11.
+
+[![YooMoney donation](https://img.shields.io/badge/Donation-Yoo.money-blue.svg)](https://yoomoney.ru/to/41001497003495)
+[![Boosty](https://img.shields.io/badge/Boosty-donate-orange.svg)](https://boosty.to/ponygames)
+[![License](https://img.shields.io/badge/License-MIT0-darkgray.svg)](#)
+[![Tag](https://img.shields.io/github/v/tag/tereshenkovav/BK-0010-game?color=00c2e8)](#)
+[![Downloads](https://img.shields.io/github/downloads/tereshenkovav/BK-0010-game/total?color=c87bff)](#)
 
 ### О проекте
 
