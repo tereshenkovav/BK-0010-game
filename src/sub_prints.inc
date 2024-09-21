@@ -1,4 +1,6 @@
 SUB_PRINTCAPTIONS:
+	MOV 	#125252,@#214
+
         MOV	R1,-(SP)
         MOV	R2,-(SP)
 
@@ -24,6 +26,8 @@ SUB_PRINTCAPTIONS:
         RTS PC
 
 SUB_PRINTSCORE:
+        MOV 	#177777,@#214
+
         MOV	R1,-(SP)
         MOV	R2,-(SP)
 
@@ -47,6 +51,8 @@ SUB_PRINTSCORE:
         RTS PC
 
 SUB_PRINTDIAMONDS:
+        MOV 	#177777,@#214
+
         MOV	R1,-(SP)
         MOV	R2,-(SP)
 
@@ -121,6 +127,8 @@ SUB_PRINTDEBUG:
 SUB_PRINTMENU:
         MOV	R1,-(SP)
         MOV	R2,-(SP)
+
+	MOV 	#125252,@#214
 
         MOV	#MSGTITLE,-(SP)   ; Строка
         MOV	#5,-(SP)   ; Y

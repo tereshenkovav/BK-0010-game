@@ -224,6 +224,14 @@ SKIP_ARRAY_ELEM3:
         ADD	#10,R0
 	SOB 	R1,CICLE_DIAMONDS_CLEAR
 
+        ; Начальное рисование звезд фона
+	MOV	#ARR_STARS,R3
+	MOV	@#ARR_STARS_SIZE,R1
+CICLE_STAR_RENDER:
+	JSR PC, @#SUB_DRAW_STAR
+	ADD	#10,R3
+	SOB	R1,CICLE_STAR_RENDER
+
 ; ===== блок рендера ======
 
         CMP	@#PONYDIR,#4      ; Выбор типа спрайта
@@ -465,6 +473,7 @@ EXIT_BY_STOP:
 .include "sub_prints.inc"
 .include "sub_hitbox.inc"
 .include "sub_intro.inc"
+.include "sub_stars.inc"
 .include "sprites.inc"
 .include "intro.inc"
 
@@ -498,6 +507,10 @@ ARR_SPRITES:
   .WORD SPRDIAMOND5, SPRDIAMOND2, SPRDIAMOND4, SPRDIAMOND6
   .WORD SPRSTONE
 ARR_SCORES:  .WORD 12,24,36, 24,50,74, 24,50,74, 50,120,170, -1
+ARR_STARS_SIZE: .WORD 12
+ARR_STARS: .WORD 125252,1,101,142,177777,1,42,220,125252,0,126,221,52525,1,311,104
+.WORD 177777,1,251,122,125252,0,113,55,125252,1,332,157,52525,0,145,50
+.WORD 125252,0,217,206,177777,0,203,62
 .include "strings.inc"
 .EVEN
 .END
