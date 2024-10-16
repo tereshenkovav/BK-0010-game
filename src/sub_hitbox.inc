@@ -108,5 +108,77 @@ SKIP_ARRAY_DIAMONDS_OVER:
 
 	RTS PC
 
+IS_ANY_DIAMOND_OVER_STAR:
+
+        ; Сохранение регистров
+        MOV	R0,-(SP)
+        MOV	R1,-(SP)
+        MOV	R2,-(SP)
+        MOV	R3,-(SP)
+        MOV	R4,-(SP)
+
+        ; Извлечение аргументов
+        ADD	#14,SP
+        MOV     (SP)+,R3 ; Y звезды
+        MOV     (SP),R2 ; X звезды
+        SUB	#16,SP
+
+	MOV	#0,R5
+
+        ; Цикл по алмазам
+	MOV	#ARR_DIAMONDS,R0
+        MOV	@#ARR_DIAMONDS_SIZE,R1
+CICLE_DIAMONDS_STAR_HITBOX:
+	CMP	(R0),#-1
+	BEQ	SKIP_ARRAY_ELEM5
+
+        MOV	#ARR_SPRITES,R4 ; Вычисление высоты алмаза
+        ADD	(R0),R4
+        ADD	(R0),R4        ; Позиция спрайта алмаза в массиве
+	MOV	(R4),R4         ; Копируем адрес, теперь указатель на спрайт
+        MOV	(R4),@#INT_DIAMOND_W
+        MOV	2(R4),@#INT_DIAMOND_H ; Сохранена высота спрайта алмаза 
+        ASL     @#INT_DIAMOND_W
+        ASL     @#INT_DIAMOND_W   ; Сохранена ширина спрайта алмаза
+
+	; Сравниваем позиции алмаза и звезды по X
+	; правый край алмаза и левый край звезды
+        MOV	2(R0),R4
+	ADD	@#INT_DIAMOND_W,R4
+        CMP	R4,R2
+        BLT	SKIP_ARRAY_ELEM5
+
+        ; левый край алмаза и правый край звезды
+        MOV	R2,R4
+	ADD	#10,R4
+        CMP	R4,2(R0)
+        BLT	SKIP_ARRAY_ELEM5
+
+	; Сравниваем позиции алмаза и звезды по Y
+        MOV	4(R0),R4
+	ADD	@#INT_DIAMOND_H,R4
+        CMP	R4,R3
+        BLT	SKIP_ARRAY_ELEM5
+
+	MOV	R3,R4
+	ADD	#10,R4
+        CMP	R4,4(R0)
+        BLT	SKIP_ARRAY_ELEM5
+
+        MOV	#1,R5
+
+SKIP_ARRAY_ELEM5:
+        ADD	#10,R0
+	SOB 	R1,CICLE_DIAMONDS_STAR_HITBOX
+
+        ; Восстановление регистров
+	MOV     (SP)+,R4
+	MOV     (SP)+,R3
+	MOV     (SP)+,R2
+	MOV     (SP)+,R1
+	MOV     (SP)+,R0
+
+	RTS PC
+
 INT_DIAMOND_W:	.WORD	0
 INT_DIAMOND_H:	.WORD	0

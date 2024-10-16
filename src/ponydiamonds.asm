@@ -234,6 +234,13 @@ CICLE_STAR_RENDER:
         MOV	#100,(R2) ;  Если достиг нуля, ставим на 100
 NOT_NOL_STAR_LIFECICLE:
 
+        MOV	4(R2),-(SP)   ; X
+        MOV	6(R2),-(SP)  ; Y
+        JSR PC, @#IS_ANY_DIAMOND_OVER_STAR
+	ADD	#4, SP     ; Восстановить стек на 2*число аргументов
+	CMP	R5, #1
+	BEQ	NEXT_STAR_CICLE
+
         MOV	2(R2),-(SP)   ; Спрайт
         MOV	4(R2),-(SP)   ; X
         MOV	6(R2),-(SP)  ; Y
@@ -241,11 +248,12 @@ NOT_NOL_STAR_LIFECICLE:
         CMP	(R2),#3    ; Для счетчика менее 3 - очистка, иначе рисование
 	BLT     CLEAR_CURRENT_STAR
         JSR PC, @#DRAWSPRITE
+        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
 	JMP	NEXT_STAR_CICLE
 CLEAR_CURRENT_STAR:
         JSR PC, @#CLEARSPRITE
-NEXT_STAR_CICLE:
         ADD	#6, SP     ; Восстановить стек на 2*число аргументов
+NEXT_STAR_CICLE:
 
 	ADD	#10,R2
 	SOB	R1,CICLE_STAR_RENDER
