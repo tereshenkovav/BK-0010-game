@@ -399,12 +399,15 @@ CICLE_DIAMONDS_NEW:
 NO_SUB_RND1:
 	MOV	R0,R3
 
-        MOV	#377,R0 ; Указываем число в интервале от 0 до 255
+        MOV	#37,R0 ; Указываем число в интервале от 0 до 31
         JSR PC, @#GENRNDVALUE
-	CMP	R0,#337
+	CMP	R0,#33
 	BLT	NO_SUB_RND2
-	SUB	#40,R0
+	SUB	#4,R0
 NO_SUB_RND2:
+        ASL	R0 ; Умножаем на 8, делая X-позицию кратной 8
+        ASL	R0
+        ASL	R0
 	MOV	R0,R4
 
 	MOV	#5,R5 ; По умолчанию скорость максимум
