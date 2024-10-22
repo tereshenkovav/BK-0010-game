@@ -13,19 +13,8 @@ DRAWSPRITE:
         MOV     (SP)+,R1 ; X
         MOV     (SP),R0 ; Адрес спрайта
         SUB	#20,SP
-
-	MOV	#40000,R3 ; Вычисляем позицию в видеопамяти
-	ASR	R1	  ; Делим X на 4 путем сдвига вправо 2 раза
-	ASR	R1
-	ADD	R1,R3
-	ASL	R2        ; Умножение #100 на Y путем сдвига влево 6 раз
-	ASL	R2
-	ASL	R2
-	ASL	R2
-	ASL	R2
-	ASL	R2
-	ADD	R2,R3   
-	MOV	R3,R1     ; В R1 теперь конечный адрес назначения
+        
+	JSR PC, @#CALC_VIDEOMEM_POS_BY_XY
 	
         MOV	(R0),R4	  ; Получаем размеры спрайта
         ADD	#2,R0
@@ -68,19 +57,9 @@ CLEARSPRITE:
         MOV     (SP)+,R1 ; X
         MOV     (SP),R0 ; Адрес спрайта
         SUB	#20,SP
-                          ; Много дублирования с кодом выше
-	MOV	#40000,R3 ; Вычисляем позицию в видеопамяти
-	ASR	R1	  ; Делим X на 4 путем сдвига вправо 2 раза
-	ASR	R1
-	ADD	R1,R3
-	ASL	R2        ; Умножение #100 на Y путем сдвига влево 6 раз
-	ASL	R2
-	ASL	R2
-	ASL	R2
-	ASL	R2
-	ASL	R2
-	ADD	R2,R3
-	MOV	R3,R1     ; В R1 теперь конечный адрес назначения
+	
+	JSR PC, @#CALC_VIDEOMEM_POS_BY_XY
+
         MOV	(R0),R4	  ; Получаем размеры спрайта
         ADD	#2,R0
         MOV	(R0),R3
@@ -125,20 +104,9 @@ CLEARZONE:
         MOV     (SP)+,R2 ; Y
         MOV     (SP),R1 ; X
         SUB	#24,SP
-                          ; Много дублирования с кодом выше
-	MOV	#40000,R3 ; Вычисляем позицию в видеопамяти
-	ASR	R1	  ; Делим X на 4 путем сдвига вправо 2 раза
-	ASR	R1
-	ADD	R1,R3
-	ASL	R2        ; Умножение #100 на Y путем сдвига влево 6 раз
-	ASL	R2
-	ASL	R2
-	ASL	R2
-	ASL	R2
-	ASL	R2
-	ADD	R2,R3
-	MOV	R3,R1     ; В R1 теперь конечный адрес назначения
-       
+
+        JSR PC, @#CALC_VIDEOMEM_POS_BY_XY
+
 	MOV	R5,R3
 
 	MOV	#0,R0
@@ -161,3 +129,20 @@ COL2:	MOVB	R0,(R1)+
 	MOV     (SP)+,R0
 
         RTS PC
+
+; Переводит из R1=x,R2=y - в R1 позицию видеопамяти. Использует R3
+CALC_VIDEOMEM_POS_BY_XY:
+	MOV	#40000,R3 ; Вычисляем позицию в видеопамяти
+	ASR	R1	  ; Делим X на 4 путем сдвига вправо 2 раза
+	ASR	R1
+	ADD	R1,R3
+	ASL	R2        ; Умножение #100 на Y путем сдвига влево 6 раз
+	ASL	R2
+	ASL	R2
+	ASL	R2
+	ASL	R2
+	ASL	R2
+	ADD	R2,R3
+	MOV	R3,R1     ; В R1 теперь конечный адрес назначения
+
+	RTS PC
