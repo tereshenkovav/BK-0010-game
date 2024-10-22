@@ -179,54 +179,6 @@ KEYSTEP3:
 	JMP	MAIN_MENU_ENTRY
 END_KEY:        
 
-; ===== блок чистки старой сцены ======
-        CMP	@#PONYX, @#PONYRENDERX
-        BEQ	NO_CLEARZONE
-        BLT	CLEAR_ZONE_FROM_BACK
-        	
-	; «атирание пр€мого хода
-        MOV	@#PONYRENDERX,-(SP)   ; X
-        MOV	@#PONYY,-(SP)  ; Y
-        MOV	#1,-(SP)  ; DX - размер затираемой области по движению
-        MOV	#40,-(SP)  ; DY
-        JSR PC, @#CLEARZONE
-        ADD	#10, SP     ; ¬осстановить стек на 2*число аргументов
-
-	JMP	NO_CLEARZONE
-
-CLEAR_ZONE_FROM_BACK:
-        ; «атирание обратного хода с конца
-        MOV	@#PONYRENDERX,R0
-	ADD	#34,R0
-        MOV	R0,-(SP)   ; X - в конце спрайта при обратном ходе
-        MOV	@#PONYY,-(SP)  ; Y
-        MOV	#1,-(SP)  ; DX - размер затираемой области по движению
-        MOV	#40,-(SP)  ; DY
-        JSR PC, @#CLEARZONE
-        ADD	#10, SP     ; ¬осстановить стек на 2*число аргументов
-
-NO_CLEARZONE:
-
-        ; «атирание алмазов
-	MOV	#ARR_DIAMONDS,R0
-        MOV	@#ARR_DIAMONDS_SIZE,R1
-CICLE_DIAMONDS_CLEAR:
-	CMP	(R0),#-1
-	BEQ	SKIP_ARRAY_ELEM3
-
-        MOV	2(R0),-(SP)   ; X
-        MOV	4(R0),R3
-        SUB	6(R0),R3
-        MOV	R3,-(SP)  ; Y
-        MOV	#10,-(SP)  ; DX 
-        MOV	6(R0),-(SP)  ; DY - размер затираемой области по движению
-        JSR PC, @#CLEARZONE
-        ADD	#10, SP     ; ¬осстановить стек на 2*число аргументов
-        
-SKIP_ARRAY_ELEM3:
-        ADD	#10,R0
-	SOB 	R1,CICLE_DIAMONDS_CLEAR
-
         ; Ќачальное рисование звезд фона
 	MOV	@#ARR_STARS_SIZE,R1
 	MOV	#ARR_STARS,R2
@@ -261,8 +213,34 @@ NEXT_STAR_CICLE:
 	ADD	#10,R2
 	SOB	R1,CICLE_STAR_RENDER
 
-; ===== блок рендера ======
+; ===== блок чистки старой сцены и вывода новой ======
+        CMP	@#PONYX, @#PONYRENDERX
+        BEQ	NO_CLEARZONE
+        BLT	CLEAR_ZONE_FROM_BACK
+        	
+	; «атирание пр€мого хода пони
+        MOV	@#PONYRENDERX,-(SP)   ; X
+        MOV	@#PONYY,-(SP)  ; Y
+        MOV	#1,-(SP)  ; DX - размер затираемой области по движению
+        MOV	#40,-(SP)  ; DY
+        JSR PC, @#CLEARZONE
+        ADD	#10, SP     ; ¬осстановить стек на 2*число аргументов
 
+	JMP	NO_CLEARZONE
+
+CLEAR_ZONE_FROM_BACK:
+        ; «атирание обратного хода с конца
+        MOV	@#PONYRENDERX,R0
+	ADD	#34,R0
+        MOV	R0,-(SP)   ; X - в конце спрайта при обратном ходе
+        MOV	@#PONYY,-(SP)  ; Y
+        MOV	#1,-(SP)  ; DX - размер затираемой области по движению
+        MOV	#40,-(SP)  ; DY
+        JSR PC, @#CLEARZONE
+        ADD	#10, SP     ; ¬осстановить стек на 2*число аргументов
+
+NO_CLEARZONE:
+        ; ¬ывод пони
         CMP	@#PONYDIR,#4      ; ¬ыбор типа спрайта
 	BNE     MIRRPONYSPR
         MOV	#SPRUNICORN,-(SP)   ; —прайт
@@ -277,13 +255,24 @@ DODRAWPONYSPR:
 
         MOV	@#PONYX,@#PONYRENDERX   ; «апомним позицию рендера
 
-        ; ¬ывод алмазов
+        ; «атирание и вывод алмазов
 	MOV	#ARR_DIAMONDS,R0
         MOV	@#ARR_DIAMONDS_SIZE,R1
-CICLE_DIAMONDS_RENDER:
+CICLE_DIAMONDS_CLEAR:
 	CMP	(R0),#-1
-	BEQ	SKIP_ARRAY_ELEM
+	BEQ	SKIP_ARRAY_ELEM3
 
+	; затирание алмаза
+        MOV	2(R0),-(SP)   ; X
+        MOV	4(R0),R3
+        SUB	6(R0),R3
+        MOV	R3,-(SP)  ; Y
+        MOV	#10,-(SP)  ; DX 
+        MOV	6(R0),-(SP)  ; DY - размер затираемой области по движению
+        JSR PC, @#CLEARZONE
+        ADD	#10, SP     ; ¬осстановить стек на 2*число аргументов
+        
+        ; ¬ывод алмаза
 	MOV	#ARR_SPRITES,R3
 	ADD	(R0),R3
 	ADD	(R0),R3
@@ -293,9 +282,9 @@ CICLE_DIAMONDS_RENDER:
         JSR PC, @#DRAWSPRITE
         ADD	#6, SP     ; ¬осстановить стек на 2*число аргументов
 
-SKIP_ARRAY_ELEM:
+SKIP_ARRAY_ELEM3:
         ADD	#10,R0
-	SOB 	R1,CICLE_DIAMONDS_RENDER
+	SOB 	R1,CICLE_DIAMONDS_CLEAR
 
 ; ===== блок обновлени€ состо€ни€ игры ======
 	ADD	@#PONYDX,@#PONYX ; ƒвижение
