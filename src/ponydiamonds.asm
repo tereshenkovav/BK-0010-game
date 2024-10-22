@@ -182,8 +182,8 @@ END_KEY:
 ; ===== блок чистки старой сцены ======
         CMP	@#PONYX, @#PONYRENDERX
         BEQ	NO_CLEARZONE
-        ;[!] Добавить выбор, где чистить, чтобы избежать лишних вызовов
-
+        BLT	CLEAR_ZONE_FROM_BACK
+        	
 	; Затирание прямого хода
         MOV	@#PONYRENDERX,-(SP)   ; X
         MOV	@#PONYY,-(SP)  ; Y
@@ -192,6 +192,9 @@ END_KEY:
         JSR PC, @#CLEARZONE
         ADD	#10, SP     ; Восстановить стек на 2*число аргументов
 
+	JMP	NO_CLEARZONE
+
+CLEAR_ZONE_FROM_BACK:
         ; Затирание обратного хода с конца
         MOV	@#PONYRENDERX,R0
 	ADD	#34,R0
