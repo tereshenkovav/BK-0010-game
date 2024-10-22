@@ -459,40 +459,6 @@ WAIT_ENTER_AT_GAMEOVER:
 	BNE     WAIT_ENTER_AT_GAMEOVER
        	JMP	MAIN_MENU_ENTRY
 
-SOUND_PLAY_HIT:
-	CMP	@#SOUNDON,#0
-	BEQ	SKIP_SOUND_PLAY_HIT
-
-	MOV	#37,-(SP)
-        MOV	#47,-(SP)
-        JSR PC, @#PLAY_SOUND_LEN_PERIOD
-        ADD	#4, SP     ; ¬осстановить стек на 2*число аргументов
-
-SKIP_SOUND_PLAY_HIT:
-	RTS PC
-
-SOUND_PLAY_GAMEOVER:
-	CMP	@#SOUNDON,#0
-	BEQ	SKIP_SOUND_PLAY_GAMEOVER
-
-	MOV	#277,-(SP)
-        MOV	#47,-(SP)
-        JSR PC, @#PLAY_SOUND_LEN_PERIOD
-        ADD	#4, SP     ; ¬осстановить стек на 2*число аргументов
-
-	MOV	#177,-(SP)
-        MOV	#77,-(SP)
-        JSR PC, @#PLAY_SOUND_LEN_PERIOD
-        ADD	#4, SP     ; ¬осстановить стек на 2*число аргументов
-
-	MOV	#77,-(SP)
-        MOV	#147,-(SP)
-        JSR PC, @#PLAY_SOUND_LEN_PERIOD
-        ADD	#4, SP     ; ¬осстановить стек на 2*число аргументов
-
-SKIP_SOUND_PLAY_GAMEOVER:
-	RTS PC
-
 EXIT_BY_STOP:
 	EMT	14
 	HALT
@@ -505,6 +471,7 @@ EXIT_BY_STOP:
 .include "sub_prints.inc"
 .include "sub_hitbox.inc"
 .include "sub_intro.inc"
+.include "sub_sounds.inc"
 .include "sprites.inc"
 .include "intro.inc"
 .include "vars.inc"
