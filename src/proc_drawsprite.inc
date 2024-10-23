@@ -16,10 +16,8 @@ DRAWSPRITE:
         
 	JSR PC, @#CALC_VIDEOMEM_POS_BY_XY
 	
-        MOV	(R0),R4	  ; Получаем размеры спрайта
-        ADD	#2,R0
-        MOV	(R0),R3
-	ADD	#2,R0
+        MOV	(R0)+,R4	  ; Получаем размеры спрайта
+        MOV	(R0)+,R3
 
 ROW:    MOV	R4,R2
         ASR	R2 ; Делим на 2 для перехода к двухбайтной операции
@@ -60,9 +58,8 @@ CLEARSPRITE:
 	
 	JSR PC, @#CALC_VIDEOMEM_POS_BY_XY
 
-        MOV	(R0),R4	  ; Получаем размеры спрайта
-        ADD	#2,R0
-        MOV	(R0),R3
+        MOV	(R0)+,R4	  ; Получаем размеры спрайта
+        MOV	(R0)+,R3
         
 	MOV	#0,R0
 
