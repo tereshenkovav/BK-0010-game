@@ -19,6 +19,62 @@ DRAWSPRITE:
         MOV	(R0)+,R4	  ; Получаем размеры спрайта
         MOV	(R0)+,R3
 
+        ; Ветвление по ширине спрайта для быстрого вывода на 2,4,6 и 8 байт
+	CMP	R4,#2
+	BEQ	ROW_W_2
+	CMP	R4,#4
+	BEQ	ROW_W_4
+	CMP	R4,#6
+	BEQ	ROW_W_6
+	CMP	R4,#10
+	BEQ	ROW_W_8
+        JMP	ROW
+
+	; Алгоритм на 2 байта
+ROW_W_2:
+	MOVB	(R0)+,(R1)+
+        MOVB	(R0)+,(R1)+
+	ADD	#76,R1
+	SOB	R3,ROW_W_2
+        JMP DRAW_SPRITE_FIN
+
+	; Алгоритм на 4 байта
+ROW_W_4:
+	MOVB	(R0)+,(R1)+
+        MOVB	(R0)+,(R1)+
+	MOVB	(R0)+,(R1)+
+        MOVB	(R0)+,(R1)+
+	ADD	#74,R1
+	SOB	R3,ROW_W_4
+        JMP DRAW_SPRITE_FIN
+
+	; Алгоритм на 6 байт
+ROW_W_6:
+	MOVB	(R0)+,(R1)+
+        MOVB	(R0)+,(R1)+
+	MOVB	(R0)+,(R1)+
+        MOVB	(R0)+,(R1)+
+	MOVB	(R0)+,(R1)+
+        MOVB	(R0)+,(R1)+
+	ADD	#72,R1
+	SOB	R3,ROW_W_6
+        JMP DRAW_SPRITE_FIN
+
+	; Алгоритм на 8 байт
+ROW_W_8:
+	MOVB	(R0)+,(R1)+
+        MOVB	(R0)+,(R1)+
+	MOVB	(R0)+,(R1)+
+        MOVB	(R0)+,(R1)+
+	MOVB	(R0)+,(R1)+
+        MOVB	(R0)+,(R1)+
+	MOVB	(R0)+,(R1)+
+        MOVB	(R0)+,(R1)+
+	ADD	#70,R1
+	SOB	R3,ROW_W_8
+        JMP DRAW_SPRITE_FIN
+
+	; Стандартный алгоритм произвольной ширины
 ROW:    MOV	R4,R2
         ASR	R2 ; Делим на 2 для перехода к двухбайтной операции
 
@@ -30,6 +86,8 @@ COL:	MOVB	(R0)+,(R1)+
 	SUB	R4,R1
 
 	SOB	R3,ROW
+
+DRAW_SPRITE_FIN:
 
         ; Восстановление регистров
 	MOV     (SP)+,R4
