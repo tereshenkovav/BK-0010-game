@@ -189,28 +189,27 @@ CICLE_STAR_RENDER:
         MOV	#100,(R2) ;  Если достиг нуля, ставим на 100
 NOT_NOL_STAR_LIFECICLE:
 
-        MOV	4(R2),-(SP)   ; X
-        MOV	6(R2),-(SP)  ; Y
+        MOV	6(R2),-(SP)   ; X
+        MOV	10(R2),-(SP)  ; Y
         JSR PC, @#IS_ANY_DIAMOND_OVER_STAR
 	ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 	CMP	R5, #1
 	BEQ	NEXT_STAR_CICLE
 
-        MOV	2(R2),-(SP)   ; Спрайт
-        MOV	4(R2),-(SP)   ; X
-        MOV	6(R2),-(SP)  ; Y
+        MOV	2(R2),-(SP)   ; Звезда
+        MOV	4(R2),-(SP)   ; Позиция видеопамяти
 
         CMP	(R2),#3    ; Для счетчика менее 3 - очистка, иначе рисование
 	BLT     CLEAR_CURRENT_STAR
-        JSR PC, @#DRAWSPRITE
-        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
+        JSR PC, @#DRAWSTAR
+        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 	JMP	NEXT_STAR_CICLE
 CLEAR_CURRENT_STAR:
-        JSR PC, @#CLEARSPRITE
-        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
+        JSR PC, @#CLEARSTAR
+        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 NEXT_STAR_CICLE:
 
-	ADD	#10,R2
+	ADD	#12,R2
 	SOB	R1,CICLE_STAR_RENDER
 
 ; ===== блок чистки старой сцены и вывода новой ======
@@ -461,6 +460,7 @@ EXIT_BY_STOP:
 .include "sub_hitbox.inc"
 .include "sub_intro.inc"
 .include "sub_sounds.inc"
+.include "sub_stars.inc"
 .include "sprites.inc"
 .include "intro.inc"
 .include "vars.inc"
