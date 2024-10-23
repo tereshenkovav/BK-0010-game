@@ -123,6 +123,21 @@ FILL_GROUND:
         MOV	#125252,(R0)+
 	SOB	R1,FILL_GROUND
 
+	; Линии интерфейса очков и алмазов
+        MOV	#0,-(SP)   ; X 
+        MOV	#14,-(SP)  ; Y
+        MOV	#400,-(SP)  ; Width
+        MOV	#125252,-(SP)  ; Color
+        JSR PC, @#DRAW_HORZ_LINE
+        ADD	#10, SP     ; Восстановить стек на 2*число аргументов
+
+        MOV	#0,-(SP)   ; X
+        MOV	#34,-(SP)  ; Y
+        MOV	#400,-(SP)  ; Width
+        MOV	#125252,-(SP)  ; Color
+        JSR PC, @#DRAW_HORZ_LINE
+        ADD	#10, SP     ; Восстановить стек на 2*число аргументов
+
 	; Начальная позиция пони, скорость, взгляд
 	MOV	#200,@#PONYX
 	MOV	#320,@#PONYY
@@ -262,6 +277,9 @@ CICLE_DIAMONDS_CLEAR:
 	BEQ	SKIP_ARRAY_ELEM3
 
 	; затирание алмаза
+        CMP	4(R0),@#DIAMONDSTARTY
+	BEQ	NO_CLEAR_NEW_DIAMOND
+
         MOV	2(R0),-(SP)   ; X
         MOV	4(R0),R3
         SUB	6(R0),R3
@@ -270,7 +288,8 @@ CICLE_DIAMONDS_CLEAR:
         MOV	6(R0),-(SP)  ; DY - размер затираемой области по движению
         JSR PC, @#CLEARZONE
         ADD	#10, SP     ; Восстановить стек на 2*число аргументов
-        
+
+NO_CLEAR_NEW_DIAMOND:
         ; Вывод алмаза
 	MOV	#ARR_SPRITES,R3
 	ADD	(R0),R3
