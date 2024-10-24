@@ -491,6 +491,7 @@ EXIT_BY_STOP:
 .include "sprites.inc"
 .include "intro.inc"
 .include "vars.inc"
+.include "version.inc"
 .include "strings.inc"
 .EVEN
 .END

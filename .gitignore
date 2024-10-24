@@ -2,5 +2,6 @@
 *.lst
 *.wav
 src/strings.inc
+src/version.inc
 setup/bk0010/*.zip
 setup/windows/*.zip
