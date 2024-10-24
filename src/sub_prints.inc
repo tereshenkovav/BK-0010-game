@@ -85,8 +85,8 @@ SUB_PRINTGAMEOVER:
         MOV	R1,-(SP)
         MOV	R2,-(SP)
 
-	MOV	#1,R1   ; позиция курсора
-	MOV	#2,R2
+	MOV	#3,R1   ; позиция курсора
+	MOV	#10,R2
 	EMT	24
 
 	MOV	@#GAMEOVERCOLOR,@#214

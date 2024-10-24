@@ -191,6 +191,7 @@ FILL_GROUND_ROW:
 	MOV	@#TOTALDIAMONDSINGAME,@#DIAMONDSDROP
 	MOV	#0,@#DIAMONDSONAIR
 	MOV	#125252,@#GAMEOVERCOLOR
+	MOV	#2,@#GAMEOVERCOLOR_LINE
 	MOV	@#GENINTERVAL,@#GENCOUNTER
 
 	JSR PC, @#SUB_PRINTCAPTIONS
@@ -391,6 +392,7 @@ NO_PLAY_SOUND:
 	CMP	R5,#-1
 	BNE	NO_STONE_HITTING
 	MOV	#177777,@#GAMEOVERCOLOR
+	MOV	#3,@#GAMEOVERCOLOR_LINE
 	JMP	ENTER_GAMEOVER
 NO_STONE_HITTING:
 
@@ -499,6 +501,42 @@ TIMERCICLEWAIT:
 	JMP 	START
 
 ENTER_GAMEOVER:
+
+        MOV	#20,-(SP)   ; X
+        MOV	#124,-(SP)  ; Y
+        MOV	#360,-(SP)  ; DX - размер затираемой области по движению
+        MOV	#40,-(SP)  ; DY
+        JSR PC, @#CLEARZONE
+        ADD	#10, SP     ; ¬осстановить стек на 2*число аргументов
+
+        MOV	#20,-(SP)   ; X
+        MOV	#124,-(SP)  ; Y
+        MOV	#41,-(SP)  ; Height
+        MOV	@#GAMEOVERCOLOR_LINE,-(SP)  ; Color
+        JSR PC, @#DRAW_VERT_LINE
+        ADD	#10, SP     ; ¬осстановить стек на 2*число аргументов
+
+        MOV	#360,-(SP)   ; X
+        MOV	#124,-(SP)  ; Y
+        MOV	#41,-(SP)  ; Height
+        MOV	@#GAMEOVERCOLOR_LINE,-(SP)  ; Color
+        JSR PC, @#DRAW_VERT_LINE
+        ADD	#10, SP     ; ¬осстановить стек на 2*число аргументов
+
+        MOV	#20,-(SP)   ; X
+        MOV	#124,-(SP)  ; Y
+        MOV	#340,-(SP)  ; Width
+        MOV	@#GAMEOVERCOLOR,-(SP)  ; Color
+        JSR PC, @#DRAW_HORZ_LINE
+        ADD	#10, SP     ; ¬осстановить стек на 2*число аргументов
+
+        MOV	#20,-(SP)   ; X
+        MOV	#164,-(SP)  ; Y
+        MOV	#340,-(SP)  ; Width
+        MOV	@#GAMEOVERCOLOR,-(SP)  ; Color
+        JSR PC, @#DRAW_HORZ_LINE
+        ADD	#10, SP     ; ¬осстановить стек на 2*число аргументов
+
         JSR PC, @#SUB_PRINTGAMEOVER
 	JSR PC, @#SOUND_PLAY_GAMEOVER
 
