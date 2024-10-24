@@ -48,6 +48,41 @@ COL_LINE:
 
 	RTS	PC
 
+DRAW_VERT_LINE:
+        ; Сохранение регистров
+        MOV	R0,-(SP)
+        MOV	R1,-(SP)
+        MOV	R2,-(SP)
+        MOV	R3,-(SP)
+        MOV	R4,-(SP)
+        MOV	R5,-(SP)
+
+        ; Извлечение аргументов
+        ADD	#16,SP
+        MOV     (SP)+,R4 ; C
+        MOV     (SP)+,R5 ; DY
+        MOV     (SP)+,R2 ; Y
+        MOV     (SP),R1 ; X
+        SUB	#24,SP
+
+        JSR PC, @#CALC_VIDEOMEM_POS_BY_XY
+
+	MOV	R5,R3
+COL_LINE1:
+	MOVB	R4,(R1)+
+	ADD	#77,R1
+	SOB	R3,COL_LINE1
+
+        ; Восстановление регистров
+	MOV     (SP)+,R5
+	MOV     (SP)+,R4
+	MOV     (SP)+,R3
+	MOV     (SP)+,R2
+	MOV     (SP)+,R1
+	MOV     (SP)+,R0
+
+	RTS	PC
+
 ; Процедура принимает в стеке число периодов звучания и длину периода
 PLAY_SOUND_LEN_PERIOD:
         ; Сохранение регистров

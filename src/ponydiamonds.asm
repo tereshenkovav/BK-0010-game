@@ -31,6 +31,41 @@ MAIN_MENU_ENTRY:
 	JSR PC, @#CLEAR_SCREEN
 	JSR PC, @#SUB_PRINTMENU
 
+        MOV	#20,-(SP)   ; X
+        MOV	#74,-(SP)  ; Y
+        MOV	#133,-(SP)  ; Height
+        MOV	#2,-(SP)  ; Color
+        JSR PC, @#DRAW_VERT_LINE
+        ADD	#10, SP     ; Восстановить стек на 2*число аргументов
+
+        MOV	#360,-(SP)   ; X
+        MOV	#74,-(SP)  ; Y
+        MOV	#133,-(SP)  ; Height
+        MOV	#2,-(SP)  ; Color
+        JSR PC, @#DRAW_VERT_LINE
+        ADD	#10, SP     ; Восстановить стек на 2*число аргументов
+
+        MOV	#20,-(SP)   ; X
+        MOV	#74,-(SP)  ; Y
+        MOV	#340,-(SP)  ; Width
+        MOV	#125252,-(SP)  ; Color
+        JSR PC, @#DRAW_HORZ_LINE
+        ADD	#10, SP     ; Восстановить стек на 2*число аргументов
+
+        MOV	#20,-(SP)   ; X
+        MOV	#132,-(SP)  ; Y
+        MOV	#340,-(SP)  ; Width
+        MOV	#125252,-(SP)  ; Color
+        JSR PC, @#DRAW_HORZ_LINE
+        ADD	#10, SP     ; Восстановить стек на 2*число аргументов
+
+        MOV	#20,-(SP)   ; X
+        MOV	#226,-(SP)  ; Y
+        MOV	#340,-(SP)  ; Width
+        MOV	#125252,-(SP)  ; Color
+        JSR PC, @#DRAW_HORZ_LINE
+        ADD	#10, SP     ; Восстановить стек на 2*число аргументов
+
 	MOV	#ARR_SPRITES,R2	
         MOV	(R2)+,-(SP)   ; Спрайт алмаза
         MOV	#70,-(SP)   ; X
@@ -52,7 +87,7 @@ MAIN_MENU_ENTRY:
 
         MOV	#SPRUNICORN,-(SP)   ; Спрайт
         MOV	#154,-(SP)   ; X
-        MOV	#240,-(SP)  ; Y
+        MOV	#244,-(SP)  ; Y
         JSR PC, @#DRAWSPRITE
         ADD	#6, SP     ; Восстановить стек на 2*число аргументов
 
