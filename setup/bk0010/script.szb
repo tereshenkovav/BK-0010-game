@@ -3,4 +3,4 @@ SetCompressionLevel 9
 ZipFile PonyDiamonds-$LANGH$-%VERSION%-BK0010.zip
 
 File ..\..\src\ponydiamonds_$LANGL$.bin
-File ..\..\src\ponydiamonds_$LANGL$.Wav
+File ..\..\src\ponydiamonds_$LANGL$.wav
