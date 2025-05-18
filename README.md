@@ -28,6 +28,11 @@
 
 Для сборки бинарного файла используется
 компилятор [БК Турбо8](https://gid.pdp-11.ru/bkturbo8_doc.html)
+либо в качестве альтернативного варианта - компилятор [MACRO11](https://gitlab.com/Rhialto/macro11),
+имменно этой версии, которая поддерживает метки длиннее 6 символов.
+Совместно с компилятором MACRO11 также требуются
+линковщик [PCLINK11](https://github.com/nzeemin/pclink11)
+и утилита [Sav2BkBin](https://github.com/nzeemin/ukncbtl-utils) - конвертер формата SAV в BIN для БК.
 
 WAV-файлы для отправки на БК-0010 через звуковое устройство сформированы утилитой
 [bkbin2wav](https://github.com/raydac/bkbin2wav)
@@ -52,6 +57,7 @@ dotnet build -c Release
 * strings-ru.utf8 - строковые константы игры в кодировке UTF8 русская версия
 * strings-en.utf8 - строковые константы игры в кодировке UTF8 английская версия
 * build_by_turbo8.bat - скрипт сборки для Турбо8, просто копирует strings-ru.utf8 в strings.inc и вызывает BKTurbo8, указывая, что входной файл в кодировке UTF8
+* build_by_macro11.bat - скрипт сборки для MACRO11, преобразует strings-ru.utf8 в strings.inc кодировки KOI8R и вызывает компилятор, линковщик и конвертер формата.
 * proc_drawsprite.inc - процедуры работы со спрайтами
 * proc_genrnd.inc - процедуры генерации псевдослучайных значений
 * proc_helpers.inc - процедуры очистки экрана и работы со звуком

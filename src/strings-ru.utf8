@@ -10,20 +10,35 @@ MSGMENUSTARTHARD: .ASCIZ  "2 - ИГРА СЛОЖНАЯ"
 MSGMENUSOUND: .ASCIZ      "3 - ЗВУКИ:      "
 MSGMENUHELP: .ASCIZ  "4 - ПОМОЩЬ"
 MSGMENUEXIT: .ASCIZ  "0 - ВЫХОД "
-TEXTON: .BYTE 22,12,222 .ASCIZ "ВКЛ "
-TEXTOFF: .BYTE 22,12,222 .ASCIZ "ВЫКЛ"
+TEXTON: .BYTE 22,12,222
+.ASCIZ "ВКЛ "
+TEXTOFF: .BYTE 22,12,222
+.ASCIZ "ВЫКЛ"
 HELPSCENE:
-.BYTE 1,0,222 .ASCIZ "ЦЕЛЬ ИГРЫ - СОБРАТЬ ЕДИНОРОГОМ"
-.BYTE 1,1,222 .ASCIZ "КАК МОЖНО БОЛЬШЕ АЛМАЗОВ"
-.BYTE 1,2,222 .ASCIZ "И НЕ ПОПАСТЬ ПОД КАМНИ"
-.BYTE 1,4,222 .ASCIZ "ОЧКИ ЗА АЛМАЗЫ:"
-.BYTE 1,5,221 .ASCIZ "КРАСНЫЙ - 10"
-.BYTE 1,6,223 .ASCIZ "СИНИЙ  -  20"
-.BYTE 1,7,222 .ASCIZ "ЗЕЛЕНЫЙ - 30"
-.BYTE 1,10,222 .ASCIZ "КРУПНЫЙ АЛМАЗ - x2 ОЧКОВ"
-.BYTE 1,11,222 .ASCIZ "СПЛОШНОЙ АЛМАЗ - x2 ОЧКОВ"
-.BYTE 1,13,222 .ASCIZ "УПРАВЛЕНИЕ:"
-.BYTE 1,14,222 .ASCIZ "СТРЕЛКИ - ПЕРЕМЕЩЕНИЕ"
-.BYTE 1,15,222 .ASCIZ "ПРОБЕЛ - ОСТАНОВИТЬСЯ"
-.BYTE 1,16,222 .ASCIZ "КТ - В МЕНЮ"
+.BYTE 1,0,222
+.ASCIZ "ЦЕЛЬ ИГРЫ - СОБРАТЬ ЕДИНОРОГОМ"
+.BYTE 1,1,222
+.ASCIZ "КАК МОЖНО БОЛЬШЕ АЛМАЗОВ"
+.BYTE 1,2,222
+.ASCIZ "И НЕ ПОПАСТЬ ПОД КАМНИ"
+.BYTE 1,4,222
+.ASCIZ "ОЧКИ ЗА АЛМАЗЫ:"
+.BYTE 1,5,221
+.ASCIZ "КРАСНЫЙ - 10"
+.BYTE 1,6,223
+.ASCIZ "СИНИЙ  -  20"
+.BYTE 1,7,222
+.ASCIZ "ЗЕЛЕНЫЙ - 30"
+.BYTE 1,10,222
+.ASCIZ "КРУПНЫЙ АЛМАЗ - x2 ОЧКОВ"
+.BYTE 1,11,222
+.ASCIZ "СПЛОШНОЙ АЛМАЗ - x2 ОЧКОВ"
+.BYTE 1,13,222
+.ASCIZ "УПРАВЛЕНИЕ:"
+.BYTE 1,14,222
+.ASCIZ "СТРЕЛКИ - ПЕРЕМЕЩЕНИЕ"
+.BYTE 1,15,222
+.ASCIZ "ПРОБЕЛ - ОСТАНОВИТЬСЯ"
+.BYTE 1,16,222
+.ASCIZ "КТ - В МЕНЮ"
 .WORD 0
