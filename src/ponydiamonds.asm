@@ -241,7 +241,21 @@ KEYSTEP3:
 	CMP	R0,#3      ; клавиша "КТ"?
 	BNE     END_KEY
 	JMP	MAIN_MENU_ENTRY
-END_KEY:        
+END_KEY:
+
+        ; Обработка джойстика
+	MOV	@#177714,R0
+
+	BIT	#000002,R0
+	BEQ	JOYSTEP1
+	MOV	#4,@#PONYDX ; Смена скорости
+	MOV	#4,@#PONYDIR; Смена поворота
+JOYSTEP1:
+	BIT	#000010,R0
+	BEQ	END_JOY
+	MOV	#-4,@#PONYDX ; Смена скорости
+	MOV	#-4,@#PONYDIR; Смена поворота
+END_JOY:
 
         ; Начальное рисование звезд фона
 	MOV	@#ARR_STARS_SIZE,R1
