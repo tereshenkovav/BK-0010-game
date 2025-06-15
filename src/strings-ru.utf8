@@ -8,8 +8,9 @@ MSGGITHUB1: .ASCIZ  "/BK-0010-game"
 MSGMENUSTARTEASY: .ASCIZ  "1 - ИГРА ЛЕГКАЯ "
 MSGMENUSTARTHARD: .ASCIZ  "2 - ИГРА СЛОЖНАЯ"
 MSGMENUSOUND: .ASCIZ      "3 - ЗВУКИ:      "
-MSGMENUHELP: .ASCIZ  "4 - ПОМОЩЬ"
-MSGMENUEXIT: .ASCIZ  "0 - ВЫХОД "
+MSGMENUHELP: .ASCIZ  "4 - ПОМОЩЬ  "
+MSGMENUINTRO: .ASCIZ  "5 - ЗАСТАВКА"
+MSGMENUEXIT: .ASCIZ  "0 - ВЫХОД   "
 TEXTON: .BYTE 22,12,222
 .ASCIZ "ВКЛ "
 TEXTOFF: .BYTE 22,12,222
@@ -41,4 +42,5 @@ HELPSCENE:
 .ASCIZ "ПРОБЕЛ - ОСТАНОВИТЬСЯ"
 .BYTE 1,16,222
 .ASCIZ "КТ - В МЕНЮ"
-.WORD 0
+.BYTE 0
+.BYTE 0

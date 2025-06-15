@@ -12,6 +12,7 @@
 	; Ставим на СТОП полный выход
 	MOV	#EXIT_BY_STOP,@#4
 
+INTRO_REPLAY:
 	JSR PC, @#SHOW_INTRO
 
         MOV	#0,R5
@@ -31,14 +32,14 @@ MAIN_MENU_ENTRY:
 
         MOV	#20,-(SP)   ; X
         MOV	#74,-(SP)  ; Y
-        MOV	#133,-(SP)  ; Height
+        MOV	#144,-(SP)  ; Height
         MOV	#2,-(SP)  ; Color
         JSR PC, @#DRAW_VERT_LINE
         ADD	#10, SP     ; Восстановить стек на 2*число аргументов
 
         MOV	#360,-(SP)   ; X
         MOV	#74,-(SP)  ; Y
-        MOV	#133,-(SP)  ; Height
+        MOV	#144,-(SP)  ; Height
         MOV	#2,-(SP)  ; Color
         JSR PC, @#DRAW_VERT_LINE
         ADD	#10, SP     ; Восстановить стек на 2*число аргументов
@@ -58,7 +59,7 @@ MAIN_MENU_ENTRY:
         ADD	#10, SP     ; Восстановить стек на 2*число аргументов
 
         MOV	#20,-(SP)   ; X
-        MOV	#226,-(SP)  ; Y
+        MOV	#237,-(SP)  ; Y
         MOV	#340,-(SP)  ; Width
         MOV	#125252,-(SP)  ; Color
         JSR PC, @#DRAW_HORZ_LINE
@@ -85,7 +86,7 @@ MAIN_MENU_ENTRY:
 
         MOV	#SPRUNICORN,-(SP)   ; Спрайт
         MOV	#154,-(SP)   ; X
-        MOV	#244,-(SP)  ; Y
+        MOV	#250,-(SP)  ; Y
         JSR PC, @#DRAWSPRITE
         ADD	#6, SP     ; Восстановить стек на 2*число аргументов
 
@@ -120,11 +121,15 @@ KEYMENU3:
 	BNE     KEYMENU4
         JMP 	HELP_ENTRY
 KEYMENU4:
-	CMP	R0,#60      ; клавиша "0"
+	CMP	R0,#65      ; клавиша "5"
 	BNE     KEYMENU5
+        JMP 	INTRO_REPLAY
+KEYMENU5:
+	CMP	R0,#60      ; клавиша "0"
+	BNE     KEYMENU6
 	EMT	14
 	HALT
-KEYMENU5:
+KEYMENU6:
        	JMP 	MENU_KEY_WAIT
 
 HELP_ENTRY:
