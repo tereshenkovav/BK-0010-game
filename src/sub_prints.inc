@@ -1,35 +1,16 @@
 SUB_PRINTCAPTIONS:
-	MOV 	#125252,@#214
+        MOV	R0,-(SP)
 
-        MOV	R1,-(SP)
-        MOV	R2,-(SP)
+	MOV	#MSGSCORE,R0
+	JSR PC, @#PRINT_STRING_BY_COLOR_AND_POS
 
-	MOV	#0,R1   ; позиция курсора
-	MOV	#0,R2
-	EMT	24
+	MOV	#MSGMAX,R0
+	JSR PC, @#PRINT_STRING_BY_COLOR_AND_POS
 
-	MOV	#MSGSCORE,R1     ; Вывод строки по умолчанию с нулем на конце
-	MOV	#0,R2
-	EMT	20
+	MOV	#MSGDIAMONDS,R0
+	JSR PC, @#PRINT_STRING_BY_COLOR_AND_POS
 
-	MOV	#13,R1   ; позиция курсора
-	MOV	#0,R2
-	EMT	24
-
-	MOV	#MSGMAX,R1     ; Вывод строки по умолчанию с нулем на конце
-	MOV	#0,R2
-	EMT	20
-
-	MOV	#24,R1   ; позиция курсора
-	MOV	#0,R2
-	EMT	24
-
-	MOV	#MSGDIAMONDS,R1     ; Вывод строки по умолчанию с нулем на конце
-	MOV	#0,R2
-	EMT	20
-
-	MOV     (SP)+,R2
-	MOV     (SP)+,R1
+	MOV     (SP)+,R0
 
         RTS PC
 
@@ -39,7 +20,7 @@ SUB_PRINTSCORE:
         MOV	R1,-(SP)
         MOV	R2,-(SP)
 
-	MOV	#6,R1   ; позиция курсора
+	MOV	@#POSVSCORE,R1   ; позиция курсора
 	MOV	#0,R2
 	EMT	24
 
@@ -53,7 +34,7 @@ SUB_PRINTSCORE:
 	MOV	#0,R2               
 	EMT	20               
 
-	MOV	#17,R1   ; позиция курсора
+	MOV	@#POSVMAX,R1   ; позиция курсора
 	MOV	#0,R2
 	EMT	24
 
@@ -78,7 +59,7 @@ SUB_PRINTDIAMONDS:
         MOV	R1,-(SP)
         MOV	R2,-(SP)
 
-	MOV	#35,R1   ; позиция курсора
+	MOV	@#POSVDIAMONDS,R1   ; позиция курсора
 	MOV	#0,R2
 	EMT	24
 

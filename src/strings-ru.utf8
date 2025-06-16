@@ -1,6 +1,7 @@
-MSGSCORE:    .ASCIZ  "ОЧКИ:"
-MSGMAX:    .ASCIZ  "МАКС:"
-MSGDIAMONDS: .ASCIZ  "АЛМАЗЫ:"
+.BYTE 0 ; Align
+POSVSCORE: .WORD 5
+POSVMAX: .WORD 17
+POSVDIAMONDS: .WORD 33
 MSGGAMEOVER: .ASCIZ  "КОНЕЦ ИГРЫ, Enter - В МЕНЮ"
 MSGTITLE: .ASCIZ  "ИГРА: ЕДИНОРОГ И АЛМАЗЫ"
 MSGAUTHOR: .ASCIZ  "ТЕРЕШЕНКОВ А.В."
@@ -13,6 +14,12 @@ MSGMENUJOYSTICK: .ASCIZ   "4 - ДЖОЙСТИК:     "
 MSGMENUHELP: .ASCIZ  "5 - ПОМОЩЬ  "
 MSGMENUINTRO: .ASCIZ  "6 - ЗАСТАВКА"
 MSGMENUEXIT: .ASCIZ  "0 - ВЫХОД   "
+MSGSCORE: .BYTE 0,0,222
+.ASCIZ  "ОЧКИ:"
+MSGMAX: .BYTE 12,0,222
+.ASCIZ  "МАКС:"
+MSGDIAMONDS: .BYTE 24,0,222
+.ASCIZ  "АЛМАЗЫ:"
 TEXTON: .BYTE 22,11,222
 .ASCIZ "ВКЛ "
 TEXTOFF: .BYTE 22,11,222
