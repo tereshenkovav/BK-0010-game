@@ -131,31 +131,38 @@ SUB_PRINTMENU:
 	MOV 	#125252,@#214
 
         MOV	#MSGTITLE,-(SP)   ; Строка
-        MOV	#5,-(SP)   ; Y
+        MOV	#4,-(SP)   ; Y
         JSR PC, @#PRINT_STRING_CENTERED
         ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
         MOV	#MSGVER,-(SP)   ; Строка
-        MOV	#6,-(SP)   ; Y
+        MOV	#5,-(SP)   ; Y
         JSR PC, @#PRINT_STRING_CENTERED
         ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
         MOV	#MSGMENUSTARTEASY,-(SP)   ; Строка
-        MOV	#10,-(SP)   ; Y
+        MOV	#7,-(SP)   ; Y
         JSR PC, @#PRINT_STRING_CENTERED
         ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
         MOV	#MSGMENUSTARTHARD,-(SP)   ; Строка
-        MOV	#11,-(SP)   ; Y
+        MOV	#10,-(SP)   ; Y
         JSR PC, @#PRINT_STRING_CENTERED
         ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
         MOV	#MSGMENUSOUND,-(SP)   ; Строка
-        MOV	#12,-(SP)   ; Y
+        MOV	#11,-(SP)   ; Y
         JSR PC, @#PRINT_STRING_CENTERED
         ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
         JSR PC, @#SUB_PRINTSOUND
+
+        MOV	#MSGMENUJOYSTICK,-(SP)   ; Строка
+        MOV	#12,-(SP)   ; Y
+        JSR PC, @#PRINT_STRING_CENTERED
+        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
+
+        JSR PC, @#SUB_PRINTJOYSTICK
 
         MOV	#MSGMENUHELP,-(SP)   ; Строка
         MOV	#13,-(SP)   ; Y
@@ -201,6 +208,19 @@ SUB_PRINTSOUND:
 LAB_NOSOUND:
 	MOV	#TEXTOFF, R0
 LAB_DO_PRINTSOUND:
+        JSR PC, @#PRINT_STRING_BY_COLOR_AND_POS
+
+	RTS PC
+
+SUB_PRINTJOYSTICK:
+
+	CMP	@#JOYSTICKON,#0
+	BEQ	LAB_NOJOYSTICK
+	MOV	#TEXTUSE, R0
+	JMP	LAB_DO_PRINTJOYSTICK
+LAB_NOJOYSTICK:
+	MOV	#TEXTNOUSE, R0
+LAB_DO_PRINTJOYSTICK:
         JSR PC, @#PRINT_STRING_BY_COLOR_AND_POS
 
 	RTS PC

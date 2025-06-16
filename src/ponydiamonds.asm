@@ -31,28 +31,28 @@ MAIN_MENU_ENTRY:
 	JSR PC, @#SUB_PRINTMENU
 
         MOV	#20,-(SP)   ; X
-        MOV	#74,-(SP)  ; Y
-        MOV	#144,-(SP)  ; Height
+        MOV	#62,-(SP)  ; Y
+        MOV	#156,-(SP)  ; Height
         MOV	#2,-(SP)  ; Color
         JSR PC, @#DRAW_VERT_LINE
         ADD	#10, SP     ; Восстановить стек на 2*число аргументов
 
         MOV	#360,-(SP)   ; X
-        MOV	#74,-(SP)  ; Y
-        MOV	#144,-(SP)  ; Height
+        MOV	#62,-(SP)  ; Y
+        MOV	#156,-(SP)  ; Height
         MOV	#2,-(SP)  ; Color
         JSR PC, @#DRAW_VERT_LINE
         ADD	#10, SP     ; Восстановить стек на 2*число аргументов
 
         MOV	#20,-(SP)   ; X
-        MOV	#74,-(SP)  ; Y
+        MOV	#62,-(SP)  ; Y
         MOV	#340,-(SP)  ; Width
         MOV	#125252,-(SP)  ; Color
         JSR PC, @#DRAW_HORZ_LINE
         ADD	#10, SP     ; Восстановить стек на 2*число аргументов
 
         MOV	#20,-(SP)   ; X
-        MOV	#132,-(SP)  ; Y
+        MOV	#120,-(SP)  ; Y
         MOV	#340,-(SP)  ; Width
         MOV	#125252,-(SP)  ; Color
         JSR PC, @#DRAW_HORZ_LINE
@@ -68,19 +68,19 @@ MAIN_MENU_ENTRY:
 	MOV	#ARR_SPRITES,R2	
         MOV	(R2)+,-(SP)   ; Спрайт алмаза
         MOV	#70,-(SP)   ; X
-        MOV	#30,-(SP)  ; Y
+        MOV	#24,-(SP)  ; Y
         JSR PC, @#DRAWSPRITE
         ADD	#6, SP     ; Восстановить стек на 2*число аргументов
 
         MOV	(R2)+,-(SP)   ; Спрайт алмаза
         MOV	#170,-(SP)   ; X
-        MOV	#30,-(SP)  ; Y
+        MOV	#24,-(SP)  ; Y
         JSR PC, @#DRAWSPRITE
         ADD	#6, SP     ; Восстановить стек на 2*число аргументов
 
         MOV	(R2)+,-(SP)   ; Спрайт алмаза
         MOV	#270,-(SP)   ; X
-        MOV	#30,-(SP)  ; Y
+        MOV	#24,-(SP)  ; Y
         JSR PC, @#DRAWSPRITE
         ADD	#6, SP     ; Восстановить стек на 2*число аргументов
 
@@ -119,17 +119,25 @@ KEYMENU2:
 KEYMENU3:
 	CMP	R0,#64      ; клавиша "4"
 	BNE     KEYMENU4
-        JMP 	HELP_ENTRY
+	MOV	#1,R2
+	SUB	@#JOYSTICKON,R2
+	MOV	R2,@#JOYSTICKON
+	JSR PC, @#SUB_PRINTJOYSTICK
+        JMP 	MENU_KEY_WAIT
 KEYMENU4:
 	CMP	R0,#65      ; клавиша "5"
 	BNE     KEYMENU5
-        JMP 	INTRO_REPLAY
+        JMP 	HELP_ENTRY
 KEYMENU5:
-	CMP	R0,#60      ; клавиша "0"
+	CMP	R0,#66      ; клавиша "6"
 	BNE     KEYMENU6
+        JMP 	INTRO_REPLAY
+KEYMENU6:
+	CMP	R0,#60      ; клавиша "0"
+	BNE     KEYMENU7
 	EMT	14
 	HALT
-KEYMENU6:
+KEYMENU7:
        	JMP 	MENU_KEY_WAIT
 
 HELP_ENTRY:
@@ -244,6 +252,9 @@ KEYSTEP3:
 END_KEY:
 
         ; Обработка джойстика
+	CMP	@#JOYSTICKON,#0
+	BEQ	END_JOY
+
 	MOV	@#177714,R0
 
 	BIT	#000002,R0

@@ -5,16 +5,21 @@ MSGTITLE: .ASCIZ  "ИГРА: ЕДИНОРОГ И АЛМАЗЫ"
 MSGAUTHOR: .ASCIZ  "ТЕРЕШЕНКОВ А.В."
 MSGGITHUB0: .ASCIZ  "github.com/tereshenkovav"
 MSGGITHUB1: .ASCIZ  "/BK-0010-game"
-MSGMENUSTARTEASY: .ASCIZ  "1 - ИГРА ЛЕГКАЯ "
-MSGMENUSTARTHARD: .ASCIZ  "2 - ИГРА СЛОЖНАЯ"
-MSGMENUSOUND: .ASCIZ      "3 - ЗВУКИ:      "
-MSGMENUHELP: .ASCIZ  "4 - ПОМОЩЬ  "
-MSGMENUINTRO: .ASCIZ  "5 - ЗАСТАВКА"
+MSGMENUSTARTEASY: .ASCIZ  "1 - ИГРА ЛЕГКАЯ   "
+MSGMENUSTARTHARD: .ASCIZ  "2 - ИГРА СЛОЖНАЯ  "
+MSGMENUSOUND: .ASCIZ      "3 - ЗВУКИ:        "
+MSGMENUJOYSTICK: .ASCIZ   "4 - ДЖОЙСТИК:     "
+MSGMENUHELP: .ASCIZ  "5 - ПОМОЩЬ  "
+MSGMENUINTRO: .ASCIZ  "6 - ЗАСТАВКА"
 MSGMENUEXIT: .ASCIZ  "0 - ВЫХОД   "
-TEXTON: .BYTE 22,12,222
+TEXTON: .BYTE 22,11,222
 .ASCIZ "ВКЛ "
-TEXTOFF: .BYTE 22,12,222
+TEXTOFF: .BYTE 22,11,222
 .ASCIZ "ВЫКЛ"
+TEXTUSE: .BYTE 25,12,222
+.ASCIZ "ЕСТЬ"
+TEXTNOUSE: .BYTE 25,12,222
+.ASCIZ "НЕТ "
 HELPSCENE:
 .BYTE 1,0,222
 .ASCIZ "ЦЕЛЬ ИГРЫ - СОБРАТЬ ЕДИНОРОГОМ"
