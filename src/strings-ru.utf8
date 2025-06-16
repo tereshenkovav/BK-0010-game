@@ -1,4 +1,5 @@
 MSGSCORE:    .ASCIZ  "ОЧКИ:"
+MSGMAX:    .ASCIZ  "МАКС:"
 MSGDIAMONDS: .ASCIZ  "АЛМАЗЫ:"
 MSGGAMEOVER: .ASCIZ  "КОНЕЦ ИГРЫ, Enter - В МЕНЮ"
 MSGTITLE: .ASCIZ  "ИГРА: ЕДИНОРОГ И АЛМАЗЫ"
