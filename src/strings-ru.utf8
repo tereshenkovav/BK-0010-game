@@ -3,17 +3,31 @@ POSVSCORE: .WORD 5
 POSVMAX: .WORD 17
 POSVDIAMONDS: .WORD 33
 MSGGAMEOVER: .ASCIZ  "КОНЕЦ ИГРЫ, Enter - В МЕНЮ"
-MSGTITLE: .ASCIZ  "ИГРА: ЕДИНОРОГ И АЛМАЗЫ"
-MSGAUTHOR: .ASCIZ  "ТЕРЕШЕНКОВ А.В."
-MSGGITHUB0: .ASCIZ  "github.com/tereshenkovav"
-MSGGITHUB1: .ASCIZ  "/BK-0010-game"
-MSGMENUSTARTEASY: .ASCIZ  "1 - ИГРА ЛЕГКАЯ   "
-MSGMENUSTARTHARD: .ASCIZ  "2 - ИГРА СЛОЖНАЯ  "
-MSGMENUSOUND: .ASCIZ      "3 - ЗВУКИ:        "
-MSGMENUJOYSTICK: .ASCIZ   "4 - ДЖОЙСТИК:     "
-MSGMENUHELP: .ASCIZ  "5 - ПОМОЩЬ  "
-MSGMENUINTRO: .ASCIZ  "6 - ЗАСТАВКА"
-MSGMENUEXIT: .ASCIZ  "0 - ВЫХОД   "
+MENUSCENE:
+.BYTE 5,4,222
+.ASCIZ   "ИГРА: ЕДИНОРОГ И АЛМАЗЫ"
+.BYTE 10,7,222
+.ASCIZ  "1 - ИГРА ЛЕГКАЯ"
+.BYTE 10,10,222
+.ASCIZ  "2 - ИГРА СЛОЖНАЯ"
+.BYTE 10,11,222
+.ASCIZ  "3 - ЗВУКИ:"
+.BYTE 10,12,222
+.ASCIZ  "4 - ДЖОЙСТИК:"
+.BYTE 12,13,222
+.ASCIZ  "5 - ПОМОЩЬ"
+.BYTE 12,14,222
+.ASCIZ  "6 - ЗАСТАВКА"
+.BYTE 12,15,222
+.ASCIZ  "0 - ВЫХОД"
+.BYTE 10,23,222
+.ASCIZ  "ТЕРЕШЕНКОВ А.В."
+.BYTE 4,24,222
+.ASCIZ  "github.com/tereshenkovav"
+.BYTE 11,25,222
+.ASCIZ  "/BK-0010-game"
+.BYTE 0
+.BYTE 0
 CAPTIONSCENE:
 .BYTE 0,0,222
 .ASCIZ  "ОЧКИ:"

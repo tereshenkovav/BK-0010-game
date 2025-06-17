@@ -123,77 +123,18 @@ SUB_PRINTDEBUG:
         RTS PC
 
 SUB_PRINTMENU:
-        MOV	R1,-(SP)
-        MOV	R2,-(SP)
-
 	MOV 	#125252,@#214
-
-        MOV	#MSGTITLE,-(SP)   ; Строка
-        MOV	#4,-(SP)   ; Y
-        JSR PC, @#PRINT_STRING_CENTERED
-        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
         MOV	#MSGVER,-(SP)   ; Строка
         MOV	#5,-(SP)   ; Y
         JSR PC, @#PRINT_STRING_CENTERED
         ADD	#4, SP     ; Восстановить стек на 2*число аргументов
 
-        MOV	#MSGMENUSTARTEASY,-(SP)   ; Строка
-        MOV	#7,-(SP)   ; Y
-        JSR PC, @#PRINT_STRING_CENTERED
-        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
-
-        MOV	#MSGMENUSTARTHARD,-(SP)   ; Строка
-        MOV	#10,-(SP)   ; Y
-        JSR PC, @#PRINT_STRING_CENTERED
-        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
-
-        MOV	#MSGMENUSOUND,-(SP)   ; Строка
-        MOV	#11,-(SP)   ; Y
-        JSR PC, @#PRINT_STRING_CENTERED
-        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
+	MOV	#MENUSCENE,R0
+	JSR PC, @#PRINT_SCENE
 
         JSR PC, @#SUB_PRINTSOUND
-
-        MOV	#MSGMENUJOYSTICK,-(SP)   ; Строка
-        MOV	#12,-(SP)   ; Y
-        JSR PC, @#PRINT_STRING_CENTERED
-        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
-
         JSR PC, @#SUB_PRINTJOYSTICK
-
-        MOV	#MSGMENUHELP,-(SP)   ; Строка
-        MOV	#13,-(SP)   ; Y
-        JSR PC, @#PRINT_STRING_CENTERED
-        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
-
-        MOV	#MSGMENUINTRO,-(SP)   ; Строка
-        MOV	#14,-(SP)   ; Y
-        JSR PC, @#PRINT_STRING_CENTERED
-        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
-
-        MOV	#MSGMENUEXIT,-(SP)   ; Строка
-        MOV	#15,-(SP)   ; Y
-        JSR PC, @#PRINT_STRING_CENTERED
-        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
-
-        MOV	#MSGAUTHOR,-(SP)   ; Строка
-        MOV	#23,-(SP)   ; Y
-        JSR PC, @#PRINT_STRING_CENTERED
-        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
-
-        MOV	#MSGGITHUB0,-(SP)   ; Строка
-        MOV	#24,-(SP)   ; Y
-        JSR PC, @#PRINT_STRING_CENTERED
-        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
-
-        MOV	#MSGGITHUB1,-(SP)   ; Строка
-        MOV	#25,-(SP)   ; Y
-        JSR PC, @#PRINT_STRING_CENTERED
-        ADD	#4, SP     ; Восстановить стек на 2*число аргументов
-
-	MOV     (SP)+,R2
-	MOV     (SP)+,R1
 
         RTS PC
 
