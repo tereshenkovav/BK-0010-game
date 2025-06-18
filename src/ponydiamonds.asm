@@ -545,20 +545,20 @@ ENTER_GAMEOVER:
         MOV	#20,-(SP)   ; X
         MOV	#124,-(SP)  ; Y
         MOV	#360,-(SP)  ; DX - размер затираемой области по движению
-        MOV	#40,-(SP)  ; DY
+        MOV	#60,-(SP)  ; DY
         JSR PC, @#CLEARZONE
         ADD	#10, SP     ; ¬осстановить стек на 2*число аргументов
 
         MOV	#20,-(SP)   ; X
         MOV	#124,-(SP)  ; Y
-        MOV	#41,-(SP)  ; Height
+        MOV	#61,-(SP)  ; Height
         MOV	@#GAMEOVERCOLOR_LINE,-(SP)  ; Color
         JSR PC, @#DRAW_VERT_LINE
         ADD	#10, SP     ; ¬осстановить стек на 2*число аргументов
 
         MOV	#360,-(SP)   ; X
         MOV	#124,-(SP)  ; Y
-        MOV	#41,-(SP)  ; Height
+        MOV	#61,-(SP)  ; Height
         MOV	@#GAMEOVERCOLOR_LINE,-(SP)  ; Color
         JSR PC, @#DRAW_VERT_LINE
         ADD	#10, SP     ; ¬осстановить стек на 2*число аргументов
@@ -571,13 +571,19 @@ ENTER_GAMEOVER:
         ADD	#10, SP     ; ¬осстановить стек на 2*число аргументов
 
         MOV	#20,-(SP)   ; X
-        MOV	#164,-(SP)  ; Y
+        MOV	#204,-(SP)  ; Y
         MOV	#340,-(SP)  ; Width
         MOV	@#GAMEOVERCOLOR,-(SP)  ; Color
         JSR PC, @#DRAW_HORZ_LINE
         ADD	#10, SP     ; ¬осстановить стек на 2*число аргументов
 
         JSR PC, @#SUB_PRINTGAMEOVER
+        ; ƒл€ экономии пам€ти, используем переменную цвета линии как
+	; проверку, сейчас победа или поражение
+	CMP #3,@#GAMEOVERCOLOR_LINE
+	BEQ NODRAWRESULT
+	JSR PC, @#SUB_PRINTGAMERESULT
+NODRAWRESULT:
 	JSR PC, @#SOUND_PLAY_GAMEOVER
 
 WAIT_ENTER_AT_GAMEOVER:	

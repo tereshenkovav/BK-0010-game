@@ -3,6 +3,8 @@ POSVSCORE: .WORD 5
 POSVMAX: .WORD 17
 POSVDIAMONDS: .WORD 33
 MSGGAMEOVER: .ASCIZ  "КОНЕЦ ИГРЫ, Enter - В МЕНЮ"
+MSGSCOREVALUE: .ASCIZ  "СОБРАНО:"
+MSGSCOREPERC: .ASCIZ  "%"
 MENUSCENE:
 .BYTE 5,4,222
 .ASCIZ   "ИГРА: ЕДИНОРОГ И АЛМАЗЫ"

@@ -99,13 +99,81 @@ SUB_PRINTGAMEOVER:
 
         RTS PC
 
+SUB_PRINTGAMERESULT:
+        MOV	R1,-(SP)
+        MOV	R2,-(SP)
+        MOV	R3,-(SP)
+        MOV	R4,-(SP)
+
+	MOV	#11,R1   ; позиция курсора
+	MOV	#12,R2
+	EMT	24
+
+	; Предполагаем, что может быть 100%, если так, то сразу к финалу
+	MOV	#144,R4
+	CMP	@#MAXSCORE,@#TEKSCORE
+	BEQ	FIN_DIV100
+
+	; Уменьшает оба числа так, чтобы TEKSCORE был не более 320
+SHIFT_BEFORE_DIV:
+	ASR	@#TEKSCORE
+	ASR	@#MAXSCORE
+	CMP	@#TEKSCORE,#501
+        BGE	SHIFT_BEFORE_DIV
+
+	; Домножаем TEKSCORE на 100
+	MOV	#0,R3
+	MOV	#144,R4
+LAB_MUL100:
+	ADD	@#TEKSCORE,R3
+	SOB	R4,LAB_MUL100
+
+	; Делим на MAXSCORE, вычитая по разу
+	MOV	#0,R4
+LAB_DIV100:
+	SUB	@#MAXSCORE,R3
+	CMP	R3,#0
+	BLE	FIN_DIV100
+	INC	R4
+	JMP	LAB_DIV100
+
+FIN_DIV100:
+	MOV	#MSGSCOREVALUE,R1     ; Вывод строки по умолчанию с нулем на конце
+	MOV	#0,R2
+	EMT	20
+
+	MOV 	#177777,@#214
+
+        MOV	R4,-(SP)   ; Процедура принимает число                    
+        MOV	#STRBUF,-(SP) ; указатель на буфер                           
+        MOV	#0,-(SP)  ; символ добивки слева или #0, если без добивки
+        JSR PC, @#INT2STR
+        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
+
+	MOV	#STRBUF,R1     ; Вывод строки по умолчанию с нулем на конце
+	MOV	#0,R2
+	EMT	20
+
+	MOV	#MSGSCOREPERC,R1
+	MOV	#0,R2
+	EMT	20
+
+	MOV	#125252,@#214
+
+	MOV     (SP)+,R4
+	MOV     (SP)+,R3
+	MOV     (SP)+,R2
+	MOV     (SP)+,R1
+
+        RTS PC
+
 SUB_PRINTDEBUG:
         MOV	R1,-(SP)
         MOV	R2,-(SP)
 
-	MOV	#5,R1   ; позиция курсора
-	MOV	#5,R2
-	EMT	24
+;	MOV	#5,R1   ; позиция курсора
+;	MOV	#5,R2
+;	EMT	24
 
         MOV	@#DEBUG,-(SP)   ; Процедура принимает число                    
         MOV	#STRBUF,-(SP) ; указатель на буфер                           
