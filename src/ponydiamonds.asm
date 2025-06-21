@@ -68,24 +68,17 @@ MAIN_MENU_ENTRY:
         JSR PC, @#DRAW_HORZ_LINE
         ADD	#10, SP     ; Восстановить стек на 2*число аргументов
 
-	MOV	#ARR_SPRITES,R2	
+	MOV	#ARR_SPRITES,R2
+	MOV	#70,R1
+MENU_SPRITE_CICLE:
         MOV	(R2)+,-(SP)   ; Спрайт алмаза
-        MOV	#70,-(SP)   ; X
+        MOV	R1,-(SP)   ; X
         MOV	#24,-(SP)  ; Y
         JSR PC, @#DRAWSPRITE
         ADD	#6, SP     ; Восстановить стек на 2*число аргументов
-
-        MOV	(R2)+,-(SP)   ; Спрайт алмаза
-        MOV	#170,-(SP)   ; X
-        MOV	#24,-(SP)  ; Y
-        JSR PC, @#DRAWSPRITE
-        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
-
-        MOV	(R2)+,-(SP)   ; Спрайт алмаза
-        MOV	#270,-(SP)   ; X
-        MOV	#24,-(SP)  ; Y
-        JSR PC, @#DRAWSPRITE
-        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
+	ADD	#100,R1
+	CMP	R1,#370
+	BNE	MENU_SPRITE_CICLE
 
         MOV	#SPRUNICORN,-(SP)   ; Спрайт
         MOV	#154,-(SP)   ; X
