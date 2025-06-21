@@ -30,6 +30,9 @@ MAIN_MENU_ENTRY:
 	JSR PC, @#CLEAR_SCREEN
 	JSR PC, @#SUB_PRINTMENU
 
+	; Для меню убираем верхнюю границу для рендера спрайтов
+        MOV	#40000, @#STARTRENDERZONE
+
         MOV	#20,-(SP)   ; X
         MOV	#62,-(SP)  ; Y
         MOV	#156,-(SP)  ; Height
@@ -89,6 +92,9 @@ MAIN_MENU_ENTRY:
         MOV	#250,-(SP)  ; Y
         JSR PC, @#DRAWSPRITE
         ADD	#6, SP     ; Восстановить стек на 2*число аргументов
+
+	; После меню восстанавливаем верхнюю границу для рендера спрайтов
+        MOV	#43500, @#STARTRENDERZONE
 
 	MOV	#0,R5  ; Накопление случайного значения
 MENU_KEY_WAIT:
