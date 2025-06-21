@@ -32,6 +32,8 @@ DRAWSPRITE:
 
 	; Алгоритм на 2 байта
 ROW_W_2:
+	CMP	R1,@#FINISHRENDERZONE
+	BGE	DRAW_SPRITE_FIN
 	MOVB	(R0)+,(R1)+
         MOVB	(R0)+,(R1)+
 	ADD	#76,R1
@@ -40,6 +42,8 @@ ROW_W_2:
 
 	; Алгоритм на 4 байта
 ROW_W_4:
+	CMP	R1,@#FINISHRENDERZONE
+	BGE	DRAW_SPRITE_FIN
 	MOVB	(R0)+,(R1)+
         MOVB	(R0)+,(R1)+
 	MOVB	(R0)+,(R1)+
@@ -50,6 +54,8 @@ ROW_W_4:
 
 	; Алгоритм на 6 байт
 ROW_W_6:
+	CMP	R1,@#FINISHRENDERZONE
+	BGE	DRAW_SPRITE_FIN
 	MOVB	(R0)+,(R1)+
         MOVB	(R0)+,(R1)+
 	MOVB	(R0)+,(R1)+
@@ -62,6 +68,8 @@ ROW_W_6:
 
 	; Алгоритм на 8 байт
 ROW_W_8:
+	CMP	R1,@#FINISHRENDERZONE
+	BGE	DRAW_SPRITE_FIN
 	MOVB	(R0)+,(R1)+
         MOVB	(R0)+,(R1)+
 	MOVB	(R0)+,(R1)+
@@ -78,13 +86,15 @@ ROW_W_8:
 ROW:    MOV	R4,R2
         ASR	R2 ; Делим на 2 для перехода к двухбайтной операции
 
+	CMP	R1,@#FINISHRENDERZONE
+	BGE	DRAW_SPRITE_FIN
+
 COL:	MOVB	(R0)+,(R1)+
         MOVB	(R0)+,(R1)+
 	SOB	R2,COL
 
 	ADD	#100,R1
 	SUB	R4,R1
-
 	SOB	R3,ROW
 
 DRAW_SPRITE_FIN:
@@ -123,14 +133,16 @@ CLEARSPRITE:
 
 ROW1:    MOV	R4,R2
 	ASR	R2 ; Делим на 2 для перехода к двухбайтной операции
-        
+
+	CMP	R1,@#FINISHRENDERZONE
+	BGE	DRAW_SPRITE_FIN
+
 COL1:	MOVB	R0,(R1)+
         MOVB	R0,(R1)+
 	SOB	R2,COL1
 
 	ADD	#100,R1
 	SUB	R4,R1
-
 	SOB	R3,ROW1
 
         ; Восстановление регистров
@@ -201,3 +213,6 @@ CALC_VIDEOMEM_POS_BY_XY:
 	MOV	R3,R1     ; В R1 теперь конечный адрес назначения
 
 	RTS PC
+
+; Нижняя граница рендера, здесь задана жестко константой
+FINISHRENDERZONE: .WORD 76000

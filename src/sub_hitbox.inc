@@ -47,7 +47,8 @@ SUB_HITBOX:
 PONY_HIT_BOX:
 
         MOV	@#LOWBORDER,R2 ; Координата пола
-        SUB	@#INT_DIAMOND_H,R2
+        ; Теперь мы убираем по верхней границе, вычитание высоты отключено
+        ;SUB	@#INT_DIAMOND_H,R2
         CMP	R1,R2
 	BLT	END_HIT_BOX
 
