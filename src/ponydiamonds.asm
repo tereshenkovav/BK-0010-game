@@ -191,6 +191,35 @@ FILL_GROUND_ROW:
         JSR PC, @#DRAW_HORZ_LINE
         ADD	#10, SP     ; Восстановить стек на 2*число аргументов
 
+	; Линия маны
+        MOV	#100,-(SP)   ; X
+        MOV	#2,-(SP)  ; Y
+        MOV	#200,-(SP)  ; Width
+        MOV	#125125,-(SP)  ; Color
+        JSR PC, @#DRAW_HORZ_LINE
+        ADD	#10, SP     ; Восстановить стек на 2*число аргументов
+
+        MOV	#100,-(SP)   ; X
+        MOV	#11,-(SP)  ; Y
+        MOV	#200,-(SP)  ; Width
+        MOV	#125125,-(SP)  ; Color
+        JSR PC, @#DRAW_HORZ_LINE
+        ADD	#10, SP     ; Восстановить стек на 2*число аргументов
+
+        MOV	#300,-(SP)   ; X
+        MOV	#2,-(SP)  ; Y
+        MOV	#10,-(SP)  ; Height
+        MOV	#1,-(SP)  ; Color
+        JSR PC, @#DRAW_VERT_LINE
+        ADD	#10, SP     ; Восстановить стек на 2*число аргументов
+
+        MOV	#74,-(SP)   ; X
+        MOV	#2,-(SP)  ; Y
+        MOV	#10,-(SP)  ; Height
+        MOV	#100,-(SP)  ; Color
+        JSR PC, @#DRAW_VERT_LINE
+        ADD	#10, SP     ; Восстановить стек на 2*число аргументов
+
 	; Начальная позиция пони, скорость, взгляд
 	MOV	#200,@#PONYX
 	MOV	#320,@#PONYY
@@ -204,6 +233,7 @@ FILL_GROUND_ROW:
 	MOV	#125252,@#GAMEOVERCOLOR
 	MOV	#2,@#GAMEOVERCOLOR_LINE
 	MOV	@#GENINTERVAL,@#GENCOUNTER
+	MOV	#0,@#JUMPCOUNTER
 
 	JSR PC, @#SUB_PRINTCAPTIONS
         JSR PC, @#SUB_PRINTSCORE
@@ -540,6 +570,22 @@ SKIP_ARRAY_ELEM4:
 
 SKIP_NEW_DIAMOND:
 	
+	; Обработка маны
+	CMP	@#JUMPCOUNTER,@#JUMPNEED
+	BEQ	JUMP_ALWAYS_READY
+	MOV	@#JUMPCOUNTER,R1
+	MOV	#40320,R1
+	ADD	@#JUMPCOUNTER,R1
+	MOV	#6,R2
+JUMP_RECT_CICLE:
+        MOVB	#125,(R1)
+	ADD	#100,R1
+	SOB	R2,JUMP_RECT_CICLE
+
+	INC	@#JUMPCOUNTER
+
+JUMP_ALWAYS_READY:
+
 ; ===== блок формирования длины фрейма ======
 TIMERCICLEWAIT:
         BIT	#200,@#177712 ; Тестируем признак прохода через ноль - бит 7
@@ -613,6 +659,22 @@ NEXT_FRAME_2:
 	RTS PC
 
 DO_PONY_JUMP:
+	CMP	@#JUMPCOUNTER,@#JUMPNEED
+	BNE	END_PONY_JUMP
+
+	MOV     #0, @#JUMPCOUNTER
+
+        MOV	#40000, @#STARTRENDERZONE
+
+        MOV	#100,-(SP)   ; X
+        MOV	#3,-(SP)  ; Y
+        MOV	#40,-(SP)  ; DX - размер затираемой области по движению
+        MOV	#6,-(SP)  ; DY
+        JSR PC, @#CLEARZONE
+        ADD	#10, SP     ; Восстановить стек на 2*число аргументов
+
+        MOV	#43500, @#STARTRENDERZONE
+
 	MOV	#SPRUNICORN,-(SP)   ; Спрайт
         MOV	@#PONYX,-(SP)   ; X
         MOV	@#PONYY,-(SP)  ; Y
@@ -631,6 +693,7 @@ DO_PONY_JUMP:
 
 	ADD	R1,@#PONYX
 	JSR PC, @#FIX_PONY_POSITION
+END_PONY_JUMP:
 	RTS PC
 
 EXIT_BY_STOP:
