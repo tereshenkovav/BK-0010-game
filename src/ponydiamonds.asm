@@ -223,10 +223,8 @@ START:
 	MOV	#3777,@#177706  ; Длительность фрейма (3777 - примерно 10 FPS)
         MOV	#24,@#177712  ; Разрешаем счет и индикацию
 
-        MOV	#0,@#PONYDX ; Сброс скорости на случай отсутствия удержаний
-
 ; ===== блок опроса клавиатуры ======
-        JSR PC, @#IS_KEY_HOLDED
+        JSR PC, @#IS_KEY_PRESSED
 
 	CMP	R0,#0       ;не было нажатий 
         BEQ     END_KEY
@@ -263,7 +261,11 @@ KEYSTEP2:
 
 	ADD	R1,@#PONYX
 	JSR PC, @#FIX_PONY_POSITION
-KEYSTEP3:
+KEYSTEP3:  
+	CMP	R0,#33      ; клавиша "вниз"?
+	BNE     KEYSTEP4
+	MOV	#0,@#PONYDX ; Смена скорости
+KEYSTEP4:
 	CMP	R0,#3      ; клавиша "КТ"?
 	BNE     END_KEY
 	JMP	MAIN_MENU_ENTRY
