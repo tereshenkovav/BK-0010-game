@@ -31,3 +31,20 @@ SOUND_PLAY_GAMEOVER:
 
 SKIP_SOUND_PLAY_GAMEOVER:
 	RTS PC
+
+SOUND_PLAY_JUMP:
+	CMP	@#SOUNDON,#0
+	BEQ	SKIP_SOUND_PLAY_JUMP
+
+	MOV	#77,-(SP)
+        MOV	#27,-(SP)
+        JSR PC, @#PLAY_SOUND_LEN_PERIOD
+        ADD	#4, SP     ; ¬осстановить стек на 2*число аргументов
+
+	MOV	#177,-(SP)
+        MOV	#17,-(SP)
+        JSR PC, @#PLAY_SOUND_LEN_PERIOD
+        ADD	#4, SP     ; ¬осстановить стек на 2*число аргументов
+
+SKIP_SOUND_PLAY_JUMP:
+	RTS PC

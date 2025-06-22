@@ -251,6 +251,8 @@ KEYSTEP2:
         JSR PC, @#CLEARSPRITE
         ADD	#6, SP     ; Восстановить стек на 2*число аргументов
 
+	JSR PC, @#SOUND_PLAY_JUMP
+
 	MOV	@#PONYDIR,R1 ; Смена скорости
 	; Умножение на 32 со знаком
 	ADD	R1,R1
