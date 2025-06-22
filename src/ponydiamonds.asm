@@ -574,8 +574,8 @@ SKIP_NEW_DIAMOND:
 	CMP	@#JUMPCOUNTER,@#JUMPNEED
 	BEQ	JUMP_ALWAYS_READY
 	MOV	@#JUMPCOUNTER,R1
-	MOV	#40320,R1
-	ADD	@#JUMPCOUNTER,R1
+	ASR	R1 ; Поправка на то, что значения маны в два раза меньше размера
+	ADD	#40320,R1
 	MOV	#6,R2
 JUMP_RECT_CICLE:
         MOVB	#125,(R1)
