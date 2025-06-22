@@ -223,11 +223,19 @@ START:
 	MOV	#3777,@#177706  ; Длительность фрейма (3777 - примерно 10 FPS)
         MOV	#24,@#177712  ; Разрешаем счет и индикацию
 
+	CMP	@#JOYSTICKON,#0
+	BEQ	NO_CLEAR_DX
+	MOV	#0,@#PONYDX
+NO_CLEAR_DX:
+
 ; ===== блок опроса клавиатуры ======
         JSR PC, @#IS_KEY_PRESSED
 
 	CMP	R0,#0       ;не было нажатий 
         BEQ     END_KEY
+
+	CMP	@#JOYSTICKON,#0
+	BNE	LAB_SKIP_KEYBOARD
 
         ; Иначе режим нажатия (1) и мы его парсим
 	CMP	R0,#31      ; клавиша "курсор вправо"?
@@ -247,6 +255,7 @@ KEYSTEP3:
 	CMP	R0,#33      ; клавиша "вниз"?
 	BNE     KEYSTEP4
 	MOV	#0,@#PONYDX ; Смена скорости
+LAB_SKIP_KEYBOARD:
 KEYSTEP4:
 	CMP	R0,#3      ; клавиша "КТ"?
 	BNE     END_KEY

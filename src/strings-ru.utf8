@@ -15,7 +15,7 @@ MENUSCENE:
 .BYTE 10,11,222
 .ASCIZ  "3 - ЗВУКИ:"
 .BYTE 10,12,222
-.ASCIZ  "4 - ДЖОЙСТИК:"
+.ASCIZ  "4 - УПРАВЛЕНИЕ:"
 .BYTE 12,13,222
 .ASCIZ  "5 - ПОМОЩЬ"
 .BYTE 12,14,222
@@ -43,10 +43,10 @@ TEXTON: .BYTE 22,11,222
 .ASCIZ "ВКЛ "
 TEXTOFF: .BYTE 22,11,222
 .ASCIZ "ВЫКЛ"
-TEXTUSE: .BYTE 25,12,222
-.ASCIZ "ЕСТЬ"
-TEXTNOUSE: .BYTE 25,12,222
-.ASCIZ "НЕТ "
+TEXTKEY: .BYTE 27,12,222
+.ASCIZ "КЛАВ"
+TEXTJOY: .BYTE 27,12,222
+.ASCIZ "ДЖОЙ"
 HELPSCENE:
 .BYTE 1,0,222
 .ASCIZ "ЦЕЛЬ ИГРЫ - СОБРАТЬ ЕДИНОРОГОМ"
