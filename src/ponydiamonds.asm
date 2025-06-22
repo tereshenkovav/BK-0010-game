@@ -242,25 +242,7 @@ KEYSTEP1:
 KEYSTEP2:
 	CMP	R0,#40      ; клавиша "пробел"?
 	BNE     KEYSTEP3
-
-	MOV	#SPRUNICORN,-(SP)   ; Спрайт
-        MOV	@#PONYX,-(SP)   ; X
-        MOV	@#PONYY,-(SP)  ; Y
-        JSR PC, @#CLEARSPRITE
-        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
-
-	JSR PC, @#SOUND_PLAY_JUMP
-
-	MOV	@#PONYDIR,R1 ; Смена скорости
-	; Умножение на 32 со знаком
-	ADD	R1,R1
-	ADD	R1,R1
-	ADD	R1,R1
-	ADD	R1,R1
-	ADD	R1,R1
-
-	ADD	R1,@#PONYX
-	JSR PC, @#FIX_PONY_POSITION
+	JSR PC, @#DO_PONY_JUMP
 KEYSTEP3:  
 	CMP	R0,#33      ; клавиша "вниз"?
 	BNE     KEYSTEP4
@@ -283,9 +265,13 @@ END_KEY:
 	MOV	#4,@#PONYDIR; Смена поворота
 JOYSTEP1:
 	BIT	#000010,R0
-	BEQ	END_JOY
+	BEQ	JOYSTEP2
 	MOV	#-4,@#PONYDX ; Смена скорости
 	MOV	#-4,@#PONYDIR; Смена поворота
+JOYSTEP2:
+	BIT	#000040,R0
+	BEQ	END_JOY
+	JSR PC, @#DO_PONY_JUMP
 END_JOY:
 
         ; Начальное рисование звезд фона
@@ -617,6 +603,26 @@ NEXT_FRAME_1:
 NEXT_FRAME_2:
 	RTS PC
 
+DO_PONY_JUMP:
+	MOV	#SPRUNICORN,-(SP)   ; Спрайт
+        MOV	@#PONYX,-(SP)   ; X
+        MOV	@#PONYY,-(SP)  ; Y
+        JSR PC, @#CLEARSPRITE
+        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
+
+	JSR PC, @#SOUND_PLAY_JUMP
+
+	MOV	@#PONYDIR,R1 ; Смена скорости
+	; Умножение на 32 со знаком
+	ADD	R1,R1
+	ADD	R1,R1
+	ADD	R1,R1
+	ADD	R1,R1
+	ADD	R1,R1
+
+	ADD	R1,@#PONYX
+	JSR PC, @#FIX_PONY_POSITION
+	RTS PC
 
 EXIT_BY_STOP:
 	EMT	14
