@@ -244,7 +244,23 @@ KEYSTEP1:
 KEYSTEP2:
 	CMP	R0,#40      ; клавиша "пробел"?
 	BNE     KEYSTEP3
-       	MOV	#0,@#PONYDX ; Остановка движения
+
+	MOV	#SPRUNICORN,-(SP)   ; Спрайт
+        MOV	@#PONYX,-(SP)   ; X
+        MOV	@#PONYY,-(SP)  ; Y
+        JSR PC, @#CLEARSPRITE
+        ADD	#6, SP     ; Восстановить стек на 2*число аргументов
+
+	MOV	@#PONYDIR,R1 ; Смена скорости
+	; Умножение на 32 со знаком
+	ADD	R1,R1
+	ADD	R1,R1
+	ADD	R1,R1
+	ADD	R1,R1
+	ADD	R1,R1
+
+	ADD	R1,@#PONYX
+	JSR PC, @#FIX_PONY_POSITION
 KEYSTEP3:
 	CMP	R0,#3      ; клавиша "КТ"?
 	BNE     END_KEY
@@ -380,14 +396,7 @@ SKIP_ARRAY_ELEM3:
 
 ; ===== блок обновления состояния игры ======
 	ADD	@#PONYDX,@#PONYX ; Движение
-	CMP	@#PONYX,#0
-	BGE     NEXT_FRAME_1
-	MOV	#0,@#PONYX
-NEXT_FRAME_1:
-	CMP	@#PONYX,#340
-	BLE     NEXT_FRAME_2
-	MOV	#340,@#PONYX
-NEXT_FRAME_2:
+	JSR PC, @#FIX_PONY_POSITION
 
         ; обсчет алмазов
 	MOV	#ARR_DIAMONDS,R0
@@ -591,6 +600,19 @@ WAIT_ENTER_AT_GAMEOVER:
 	CMP	R0,#12      ; клавиша "ввод"?
 	BNE     WAIT_ENTER_AT_GAMEOVER
        	JMP	MAIN_MENU_ENTRY
+
+FIX_PONY_POSITION:
+	CMP	@#PONYX,#0
+	BGE     NEXT_FRAME_1
+	MOV	#0,@#PONYX
+	RTS PC
+NEXT_FRAME_1:
+	CMP	@#PONYX,#340
+	BLE     NEXT_FRAME_2
+	MOV	#340,@#PONYX
+NEXT_FRAME_2:
+	RTS PC
+
 
 EXIT_BY_STOP:
 	EMT	14
