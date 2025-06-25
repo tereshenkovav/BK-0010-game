@@ -533,11 +533,11 @@ NO_SUB_RND2:
         ASL	R0
 	MOV	R0,R4
 
-	MOV	#5,R5 ; По умолчанию скорость максимум
+	MOV	#4,R5 ; По умолчанию скорость максимум
 	JSR PC,	@#SUB_IS_X_OVER_DIAMONDS
 	CMP	R0,#0
 	BEQ	NO_FIX_NEWVELOCITY ; Проверили пересечение и если оно есть
-	MOV	#3,R5  ; то нужно уменьшить скорость
+	MOV	#2,R5  ; то нужно уменьшить скорость
 NO_FIX_NEWVELOCITY:
 
 	MOV	R2,R0 ; restore
@@ -582,7 +582,7 @@ JUMP_RECT_CICLE:
 	ADD	#100,R1
 	SOB	R2,JUMP_RECT_CICLE
 
-	INC	@#JUMPCOUNTER
+	ADD	#2,@#JUMPCOUNTER
 
 JUMP_ALWAYS_READY:
 
