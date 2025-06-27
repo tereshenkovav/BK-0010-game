@@ -12,8 +12,8 @@ SET VERSION=%BUILDTAG:~1%
 
 pushd ..\..\src
 call build_by_turbo8.bat
-bkbin2wav-windows-386.exe -i ponydiamonds_ru.bin -o ponydiamonds_ru.wav
-bkbin2wav-windows-386.exe -i ponydiamonds_en.bin -o ponydiamonds_en.wav
+bkbin2wav-windows-386.exe -i ponydiamonds_ru.bin -o ponydiamonds_ru.wav -n PONY
+bkbin2wav-windows-386.exe -i ponydiamonds_en.bin -o ponydiamonds_en.wav -n PONY
 popd
 
 SmartZipBuilder.exe script.szb /LANGL=ru /LANGH=RU
